@@ -1,0 +1,139 @@
+name: PlugCubeBuildersIn
+main: hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn
+version: {VERSION}
+author: Siggi
+description: The CubeBuilders plugin.
+softdepend: [Factions, PlotMe, Touchsigns, Statues, GsonBukkit, Essentials, EssentialsSpawn, WorldGuard, WorldEdit, PermissionsEx, OpenInv]
+depend: [NBTTool]
+api-version: 1.13
+permissions:
+    hk.siggi.plugcubebuildersin.spawneditems:
+        description: Allow the player to have spawned items in inventory.
+        default: op
+    hk.siggi.plugcubebuildersin.bounty.clean:
+        description: Allow the player to reset anyones bounty to zero.
+        default: op
+    hk.siggi.plugcubebuildersin.staffchat:
+        description: Allow the player to use Staff Chat.
+        default: op
+    hk.siggi.plugcubebuildersin.staffchat.color:
+        description: Allow the player to use colours in Staff Chat.
+        default: op
+    hk.siggi.plugcubebuildersin.staffchat.format:
+        description: Allow the player to use format codes in Staff Chat.
+        default: op
+    hk.siggi.plugcubebuildersin.staffchat.magic:
+        description: Allow the player to use magic code in Staff Chat.
+        default: op
+    hk.siggi.plugcubebuildersin.staffchat.url:
+        description: Allow the player to use URLs Staff Chat.
+        default: op
+    hk.siggi.plugcubebuildersin.vip:
+        description: Allow the player to use VIP only features.
+    hk.siggi.plugcubebuildersin.worldspawn:
+        description: Update the spawn point for the current world.
+    hk.siggi.plugcubebuildersin.factionreset:
+        description: Declaim all faction land in a world.
+    hk.siggi.plugcubebuildersin.snaptogrid:
+        description: Snap to grid.
+    hk.siggi.plugcubebuildersin.closetheend:
+        description: Close the end.
+    hk.siggi.plugcubebuildersin.silktouchspawner:
+        description: Allow player to silk touch spawner.
+    hk.siggi.plugcubebuildersin.bypassfactionthrottle:
+        description: Bypass Factions throttling.
+        default: op
+    hk.siggi.plugcubebuildersin.reloaduuid:
+        description: Reload UUIDs from file.
+        default: op
+    hk.siggi.plugcubebuildersin.clearchat:
+        description: Allow clearing the chat using /cc.
+        default: op
+    hk.siggi.plugcubebuildersin.cheat:
+        description: Allow using cheats from CubeBuilders Mod.
+        default: op
+    hk.siggi.plugcubebuildersin.signedit:
+        description: Allow editing signs.
+        default: op
+    hk.siggi.plugcubebuildersin.replay:
+        description: Allow playing replays.
+        default: op
+commands:
+    help:
+        description: Open the CubeBuilders menu.
+        usage: /<command>
+    donate:
+        description: Buy CubeTokens or get a Donator rank!
+        usage: /<command>
+    buy:
+        description: Buy CubeTokens or get a Donator rank!
+        usage: /<command>
+    vote:
+        description: Vote for CubeBuilders and get money!
+        usage: /<command>
+    bounty:
+        description: CubeBuilders Bounty Command
+        usage: /<command>
+    a:
+        description: Staff Chat
+        usage: /<command> <message>
+    cash:
+        description: VIP Cash Command
+        usage: /<command>
+    worldspawn:
+        description: Set Spawn for current world.
+        usage: /<command>
+    factionreset:
+        description: Declaim all land in the specified world.
+        usage: /<command> [world]
+    snaptogrid:
+        description: Snap to Grid.
+        usage: /<command>
+    closetheend:
+        description: Close the end.
+        usage: /<command>
+    cc:
+        description: Clear the chat
+        usage: /<command>
+    quit:
+        description: Quit to lobby
+        usage: /<command>
+    pvp:
+        description: Voluntarily make yourself vulnerable to PvP.
+        usage: /<command>
+    tellallraw:
+        description: Tellraw to all players.
+        usage: /<command> [jsontext]
+    signedit:
+        description: Edit signs.
+        usage: /<command>
+    speedup:
+        description: Speed up
+        usage: /<command>
+    wardrobe:
+        description: Select another user wardrobe.
+        usage: /<command> [player]
+    music:
+        description: Play music.
+        usage: /<command> [track]
+    renderdistance:
+        description: Set render distance
+        usage: /<command> [newdistance]
+    st:
+        description: Toggle Staff Mode where applicable.
+        usage: /<command> [on|off]
+    vp:
+        description: Toggle Vanish Protection.
+        usage: /<command>
+    replay:
+        description: Replay some actions.
+        usage: /<command>
+    dbg:
+        description: Debug command
+        usage: /<command>
+    ping:
+        description: Ping command
+        usage: /<command>
+    pong:
+        description: Pong command
+        usage: /<command>
