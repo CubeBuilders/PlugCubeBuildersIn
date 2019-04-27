@@ -1,12 +1,9 @@
 package hk.siggi.bukkit.plugcubebuildersin.commands;
 
-import com.bobacadodl.JSONChatLib.JSONChatClickEventType;
-import com.bobacadodl.JSONChatLib.JSONChatColor;
-import com.bobacadodl.JSONChatLib.JSONChatExtra;
-import com.bobacadodl.JSONChatLib.JSONChatFormat;
-import com.bobacadodl.JSONChatLib.JSONChatMessage;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
-import java.util.ArrayList;
+import static hk.siggi.bukkit.plugcubebuildersin.util.ChatUtil.link;
+import static hk.siggi.bukkit.plugcubebuildersin.util.ChatUtil.runCommand;
+import static hk.siggi.bukkit.plugcubebuildersin.util.ChatUtil.suggestCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -195,29 +192,5 @@ public class HelpCommand implements CommandExecutor {
 			}
 		}
 		return true;
-	}
-
-	public void link(Player player, String text, String url) {
-		JSONChatMessage message = new JSONChatMessage("-> ", JSONChatColor.WHITE, new ArrayList<JSONChatFormat>());
-		JSONChatExtra extra = new JSONChatExtra(text, JSONChatColor.AQUA, new ArrayList<JSONChatFormat>());
-		extra.setClickEvent(JSONChatClickEventType.OPEN_URL, url);
-		message.addExtra(extra);
-		message.sendToPlayer(player);
-	}
-
-	public void runCommand(Player player, String text, String command) {
-		JSONChatMessage message = new JSONChatMessage("-> ", JSONChatColor.WHITE, new ArrayList<JSONChatFormat>());
-		JSONChatExtra extra = new JSONChatExtra(text, JSONChatColor.AQUA, new ArrayList<JSONChatFormat>());
-		extra.setClickEvent(JSONChatClickEventType.RUN_COMMAND, command);
-		message.addExtra(extra);
-		message.sendToPlayer(player);
-	}
-
-	public void suggestCommand(Player player, String text, String command) {
-		JSONChatMessage message = new JSONChatMessage("-> ", JSONChatColor.WHITE, new ArrayList<JSONChatFormat>());
-		JSONChatExtra extra = new JSONChatExtra(text, JSONChatColor.AQUA, new ArrayList<JSONChatFormat>());
-		extra.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, command);
-		message.addExtra(extra);
-		message.sendToPlayer(player);
 	}
 }

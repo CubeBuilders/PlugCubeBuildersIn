@@ -1,15 +1,11 @@
 package hk.siggi.bukkit.plugcubebuildersin.commands;
 
-import com.bobacadodl.JSONChatLib.JSONChatClickEventType;
-import com.bobacadodl.JSONChatLib.JSONChatColor;
-import com.bobacadodl.JSONChatLib.JSONChatExtra;
-import com.bobacadodl.JSONChatLib.JSONChatFormat;
-import com.bobacadodl.JSONChatLib.JSONChatMessage;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
 import hk.siggi.bukkit.plugcubebuildersin.module.BankModule;
 import hk.siggi.bukkit.plugcubebuildersin.module.HighscoresModule;
 import hk.siggi.bukkit.plugcubebuildersin.module.HighscoresModule.Scoreboard;
-import java.util.ArrayList;
+import static hk.siggi.bukkit.plugcubebuildersin.util.ChatUtil.runCommand;
+import static hk.siggi.bukkit.plugcubebuildersin.util.ChatUtil.suggestCommand;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.ChatColor;
@@ -158,21 +154,5 @@ public class BountyCommand implements CommandExecutor {
 			runCommand(player, "Next page - /bounty " + (currentPage + 1), "/bounty " + (currentPage + 1));
 		}
 		return true;
-	}
-
-	public void suggestCommand(Player player, String text, String command) {
-		JSONChatMessage message = new JSONChatMessage("-> ", JSONChatColor.WHITE, new ArrayList<JSONChatFormat>());
-		JSONChatExtra extra = new JSONChatExtra(text, JSONChatColor.AQUA, new ArrayList<JSONChatFormat>());
-		extra.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, command);
-		message.addExtra(extra);
-		message.sendToPlayer(player);
-	}
-
-	public void runCommand(Player player, String text, String command) {
-		JSONChatMessage message = new JSONChatMessage("-> ", JSONChatColor.WHITE, new ArrayList<JSONChatFormat>());
-		JSONChatExtra extra = new JSONChatExtra(text, JSONChatColor.AQUA, new ArrayList<JSONChatFormat>());
-		extra.setClickEvent(JSONChatClickEventType.RUN_COMMAND, command);
-		message.addExtra(extra);
-		message.sendToPlayer(player);
 	}
 }
