@@ -156,7 +156,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -2998,19 +2997,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	}
 
 	private VariableUpdater[] variableUpdaters = null;
-
-	@EventHandler
-	public void chunkUnloading(ChunkUnloadEvent event) {
-		if (variableUpdaters == null) {
-			return;
-		}
-		for (VariableUpdater variableUpdater : variableUpdaters) {
-			if (variableUpdater.usesChunk(event.getChunk())) {
-				event.setCancelled(true);
-				return;
-			}
-		}
-	}
 
 	@EventHandler
 	public void worldLoad(WorldLoadEvent event) {

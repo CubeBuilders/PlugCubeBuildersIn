@@ -23,6 +23,9 @@ public class VariableUpdater {
 	}
 
 	public void update(String variable, String value) {
+		if (!chunk.isLoaded()) {
+			return;
+		}
 		try {
 			if (this.variable.equals(variable)) {
 				Sign sign = (Sign) block.getState();
