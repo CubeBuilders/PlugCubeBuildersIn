@@ -3,7 +3,7 @@ main: hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn
 version: {VERSION}
 author: Siggi
 description: The CubeBuilders plugin.
-softdepend: [Factions, PlotMe, Touchsigns, Statues, GsonBukkit, Essentials, EssentialsSpawn, WorldGuard, WorldEdit, PermissionsEx, OpenInv]
+softdepend: [Factions, Touchsigns, Statues, GsonBukkit, Essentials, EssentialsSpawn, WorldGuard, WorldEdit, PermissionsEx, OpenInv]
 depend: [NBTTool]
 api-version: 1.13
 permissions:
