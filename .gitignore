@@ -2,8 +2,9 @@
 dist
 build
 lib
-nbproject/private
-**/nbproject/private
+nbproject
+target
+dependency-reduced-pom.xml
 
 # macOS filesystem litter
 .DS_Store
