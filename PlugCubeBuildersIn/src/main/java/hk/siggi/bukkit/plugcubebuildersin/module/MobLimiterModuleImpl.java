@@ -171,7 +171,6 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 			case CUSTOM: // plugins
 			case DROWNED:
 			case ENDER_PEARL:
-			case EXPLOSION:
 			case INFECTION:
 			case JOCKEY:
 			case LIGHTNING:
