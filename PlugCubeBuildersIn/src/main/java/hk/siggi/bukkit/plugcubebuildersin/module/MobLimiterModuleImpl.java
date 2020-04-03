@@ -82,42 +82,28 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		SpawnReason spawnReason = event.getSpawnReason();
-		switch (spawnReason) {
-			case BREEDING:
-			case BUILD_IRONGOLEM:
-			case BUILD_SNOWMAN:
-			case BUILD_WITHER:
-			case CHUNK_GEN:
-			case CURED:
-			case CUSTOM:
-			case DISPENSE_EGG:
-			case EGG: // chicken from egg, not spawn egg
-			case INFECTION:
-			case JOCKEY:
-			case MOUNT: // mount for a jockey
-			case LIGHTNING:
-			case OCELOT_BABY:
-			case REINFORCEMENTS:
-			case SHOULDER_ENTITY:
-			case SILVERFISH_BLOCK:
-			case SLIME_SPLIT:
-			case SPAWNER_EGG:
-			case TRAP:
-			case VILLAGE_DEFENSE:
-				break;
-			default: {
-				StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-				for (StackTraceElement ele : stackTrace) {
-					if (ele.getClassName().endsWith(".CommandSummon")) {
-						break;
-					}
-				}
-				if (!allowSpawn(event.getLocation())) {
-					event.setCancelled(true);
-					return;
+		boolean skipCheck = false;
+		if (spawnReason == SpawnReason.NATURAL) {
+			StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+			for (StackTraceElement ele : stackTrace) {
+				if (ele.getClassName().endsWith(".CommandSummon")) {
+					skipCheck = true;
+					// allow the /minecraft:summon command to bypass the restrictions
+					// when spawning using that command, it uses SpawnReason.NATURAL for some reason
+					break;
 				}
 			}
-			break;
+		}
+		if (spawnReason == SpawnReason.DISPENSE_EGG || spawnReason == SpawnReason.SPAWNER_EGG) {
+			// if we reached this point, we've already allowed it.
+			// see other places that allowSpawn is called
+			skipCheck = true;
+		}
+		if (!skipCheck) {
+			if (!allowSpawn(event.getLocation(), spawnReason)) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 		addEntity(event.getEntity(), event.getLocation().getChunk());
 	}
@@ -136,7 +122,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		BlockFace facing = dispenser.getFacing();
 		Block spawnPoint = block.getRelative(facing);
 		Location pos = spawnPoint.getLocation().add(0.5, 0.0, 0.5);
-		if (!allowSpawn(pos)) {
+		if (!allowSpawn(pos, SpawnReason.DISPENSE_EGG)) {
 			event.setCancelled(true);
 		}
 	}
@@ -157,7 +143,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		BlockFace facing = event.getBlockFace();
 		Block spawnPoint = block.getRelative(facing);
 		Location pos = spawnPoint.getLocation().add(0.5, 0.0, 0.5);
-		if (!allowSpawn(pos)) {
+		if (!allowSpawn(pos, SpawnReason.SPAWNER_EGG)) {
 			event.setCancelled(true);
 			Player p = event.getPlayer();
 			p.sendMessage(ChatColor.RED + "There are too many mobs here!");
@@ -172,8 +158,40 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		return false;
 	}
 
-	private boolean allowSpawn(Location loc) {
+	private boolean allowSpawn(Location loc, SpawnReason spawnReason) {
+		int limit = 8;
+		switch (spawnReason) {
+			case BREEDING:
+			case BUILD_IRONGOLEM:
+			case BUILD_SNOWMAN:
+			case BUILD_WITHER:
+				limit = 15;
+				break;
+			case CURED:
+			case CUSTOM: // plugins
+			case DROWNED:
+			case ENDER_PEARL:
+			case EXPLOSION:
+			case INFECTION:
+			case JOCKEY:
+			case LIGHTNING:
+			case MOUNT:
+			case PATROL:
+			case RAID:
+			case REINFORCEMENTS:
+			case SHEARED:
+			case SHOULDER_ENTITY:
+			case SLIME_SPLIT:
+			case TRAP:
+			case VILLAGE_DEFENSE:
+			case VILLAGE_INVASION:
+				limit = -1;
+				break;
+		}
 		clean();
+		if (limit == -1) {
+			return true;
+		}
 		Chunk chunk = loc.getChunk();
 		String chunkString = getString(chunk);
 		Entity[] entities = chunk.getEntities();
@@ -197,7 +215,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 			}
 			spawnedCount += 1;
 		}
-		return !(entityCount > 8 || spawnedCount > 8);
+		return entityCount < limit && spawnedCount < limit;
 	}
 
 	@Override
