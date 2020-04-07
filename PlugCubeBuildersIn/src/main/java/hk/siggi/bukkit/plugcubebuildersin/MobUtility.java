@@ -5,9 +5,9 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
-public class EggConverter {
+public class MobUtility {
 
-	private EggConverter() {
+	private MobUtility() {
 	}
 
 	private static final Map<Material, EntityType> materialToEntity = new HashMap<>();
