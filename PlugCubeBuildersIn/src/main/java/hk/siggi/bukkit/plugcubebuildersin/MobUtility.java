@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 public class MobUtility {
 
@@ -12,6 +13,7 @@ public class MobUtility {
 
 	private static final Map<Material, EntityType> materialToEntity = new HashMap<>();
 	private static final Map<EntityType, Material> entityToMaterial = new HashMap<>();
+	private static final Map<Class<? extends LivingEntity>, EntityType> classToEntity = new HashMap<>();
 
 	public static boolean isEgg(Material material) {
 		return materialToEntity.containsKey(material);
@@ -25,9 +27,14 @@ public class MobUtility {
 		return entityToMaterial.get(entityType);
 	}
 	
-	private static void add(Material material, EntityType entityType){
+	public static EntityType getMob(Class<? extends LivingEntity> clazz) {
+		return classToEntity.get(clazz);
+	}
+	
+	private static void add(Material material, EntityType entityType, Class<? extends LivingEntity> clazz){
 		materialToEntity.put(material, entityType);
 		entityToMaterial.put(entityType, material);
+		classToEntity.put(clazz, entityType);
 	}
 
 	static {
@@ -48,8 +55,8 @@ public class MobUtility {
 				} else {
 					entityType = EntityType.valueOf(mob);
 				}
-
-				add(eggMaterial, entityType);
+				Class<? extends LivingEntity> clazz = (Class<LivingEntity>) entityType.getEntityClass();
+				add(eggMaterial, entityType, clazz);
 			} catch (Exception e) {
 			}
 		}
