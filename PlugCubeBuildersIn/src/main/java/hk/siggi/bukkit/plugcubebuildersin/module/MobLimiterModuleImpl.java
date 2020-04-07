@@ -1,7 +1,6 @@
 package hk.siggi.bukkit.plugcubebuildersin.module;
 
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +30,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 	private PlugCubeBuildersIn plugin;
 	private final Set<LivingEntity> trackedEntities = new HashSet<>();
 	private final Map<LivingEntity, String> entityToSpawnedChunk = new HashMap<>();
-	private final Map<String, ArrayList<LivingEntity>> entitiesSpawnedInChunks = new HashMap<>();
+	private final Map<String, Set<LivingEntity>> entitiesSpawnedInChunks = new HashMap<>();
 
 	private void clean() {
 		for (Iterator<LivingEntity> it = trackedEntities.iterator(); it.hasNext();) {
@@ -41,7 +40,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 				entityToSpawnedChunk.remove(entity);
 				it.remove();
 				if (chunkString != null) {
-					ArrayList<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
+					Set<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
 					if (entityList != null) {
 						entityList.remove(entity);
 						if (entityList.isEmpty()) {
@@ -60,19 +59,19 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		trackedEntities.add(entity);
 		String chunkString = getString(chunk);
 		entityToSpawnedChunk.put(entity, chunkString);
-		ArrayList<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
+		Set<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
 		if (entityList == null) {
-			entitiesSpawnedInChunks.put(chunkString, entityList = new ArrayList<>());
+			entitiesSpawnedInChunks.put(chunkString, entityList = new HashSet<>());
 		}
 		entityList.add(entity);
 	}
 
-	private LivingEntity[] getEntitiesSpawnedInChunk(String chunkString) {
-		ArrayList<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
+	private Set<LivingEntity> getEntitiesSpawnedInChunk(String chunkString) {
+		Set<LivingEntity> entityList = entitiesSpawnedInChunks.get(chunkString);
 		if (entityList == null) {
-			return new LivingEntity[0];
+			return new HashSet<>();
 		}
-		return entityList.toArray(new LivingEntity[entityList.size()]);
+		return entityList;
 	}
 
 	private String getString(Chunk chunk) {
@@ -160,8 +159,15 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 
 	private boolean allowSpawn(Location loc, SpawnReason spawnReason) {
 		int limit = 8;
+		int limitNearby = 50;
 		switch (spawnReason) {
+			case SPAWNER:
+				limit = 15;
+				limitNearby = 72;
+				break;
 			case BREEDING:
+				limit = 12;
+				break;
 			case BUILD_IRONGOLEM:
 			case BUILD_SNOWMAN:
 			case BUILD_WITHER:
@@ -193,28 +199,41 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		}
 		Chunk chunk = loc.getChunk();
 		String chunkString = getString(chunk);
+		Set<LivingEntity> entitiesToCount = new HashSet<>();
 		Entity[] entities = chunk.getEntities();
-		LivingEntity[] spawnedLivingEntities = getEntitiesSpawnedInChunk(chunkString);
-		int entityCount = 0;
 		for (Entity entity : entities) {
 			if (entity instanceof LivingEntity) {
-				entityCount += 1;
+				entitiesToCount.add((LivingEntity) entity);
 			}
 		}
-		int spawnedCount = 0;
-		for (LivingEntity spawnedLivingEntity : spawnedLivingEntities) {
-			boolean c = false;
-			for (Entity entity : entities) {
-				if (entity == spawnedLivingEntity) {
-					c = true;
+		Set<LivingEntity> spawnedLivingEntities = getEntitiesSpawnedInChunk(chunkString);
+		entitiesToCount.addAll(spawnedLivingEntities);
+		if (entitiesToCount.size() >= limit) {
+			return false;
+		}
+		int cX = chunk.getX();
+		int cZ = chunk.getZ();
+		for (int chunkZ = cZ - 1; chunkZ <= cZ + 1; chunkZ++) {
+			for (int chunkX = cX - 1; chunkX <= cX + 1; chunkX++) {
+				Chunk chunk2 = chunk.getWorld().getChunkAt(chunkX, chunkZ);
+				if (chunk2.equals(chunk)) {
+					continue;
 				}
+				String chunk2String = getString(chunk);
+				entities = chunk2.getEntities();
+				for (Entity entity : entities) {
+					if (entity instanceof LivingEntity) {
+						entitiesToCount.add((LivingEntity) entity);
+					}
+				}
+				spawnedLivingEntities = getEntitiesSpawnedInChunk(chunk2String);
+				entitiesToCount.addAll(spawnedLivingEntities);
 			}
-			if (c) {
-				continue;
-			}
-			spawnedCount += 1;
 		}
-		return entityCount < limit && spawnedCount < limit;
+		if (entitiesToCount.size() >= limitNearby) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
