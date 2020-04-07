@@ -365,6 +365,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		setupModule("Skyblock", "SkyblockModuleImpl");
 		setupModule("Statues", "hk.siggi.bukkit.plugcubebuildersin.replay.ActionReplayImpl");
 		setupModule("MobLimiterModuleImpl");
+		setupModule("PhantomRestricterModuleImpl");
 		setupModule("HighscoresModuleImpl");
 		setupModule("WarpPortals", "WarpPortalsModuleImpl");
 		setupModule("hk.siggi.bukkit.plugcubebuildersin.punisher.PunisherModuleImpl");
