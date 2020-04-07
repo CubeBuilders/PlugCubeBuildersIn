@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.GameMode;
+import org.bukkit.Statistic;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -44,6 +45,8 @@ public class PlayerSession {
 	public boolean vanishProtection = true;
 	
 	public long loginTime = 0L;
+	
+	private int backupTimeSinceRest = 0;
 
 	PlayerSession(PlugCubeBuildersIn plugin, Player player) {
 		groupList.add("default");
@@ -124,6 +127,8 @@ public class PlayerSession {
 		if (sky != null) {
 			sky.setBypassing(player, true);
 		}
+		backupTimeSinceRest = player.getStatistic(Statistic.TIME_SINCE_REST);
+		player.setStatistic(Statistic.TIME_SINCE_REST, 0); // stop phantoms
 		staffPermsOnState.apply(player, GameMode.SURVIVAL, true);
 
 		// teleport is not really necessary for turning on.
@@ -159,6 +164,8 @@ public class PlayerSession {
 		}
 		staffPermsOffState.apply(player, GameMode.SURVIVAL, true);
 		staffPermsOffState.teleport(player);
+
+		player.setStatistic(Statistic.TIME_SINCE_REST, backupTimeSinceRest); // restore previous statistic for phantoms
 	}
 
 	public void logout() {

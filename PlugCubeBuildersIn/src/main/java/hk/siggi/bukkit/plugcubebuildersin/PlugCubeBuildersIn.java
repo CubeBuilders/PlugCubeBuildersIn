@@ -101,6 +101,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Sound;
+import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -813,6 +814,12 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			}
 		}
 		updatePlayerVisibility();
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (p.getGameMode() == GameMode.CREATIVE) {
+				// stops phantoms spawning for creative mode
+				p.setStatistic(Statistic.TIME_SINCE_REST, 0);
+			}
+		}
 		for (Player p : getServer().getOnlinePlayers()) {
 			PlayerSession sess = getSession(p);
 			ActionReplay ar = getModule(ActionReplay.class);
@@ -825,6 +832,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				p.sendMessage(ChatColor.GREEN + "Switching to Staff Mode automatically since you're vanished.");
 			}
 			if (staffPerms) {
+				// stops phantoms spawning for people in staff mode
+				p.setStatistic(Statistic.TIME_SINCE_REST, 0);
 				addHotbar(p, "staffmode", "Staff Mode");
 			} else {
 				removeHotbar(p, "staffmode");
