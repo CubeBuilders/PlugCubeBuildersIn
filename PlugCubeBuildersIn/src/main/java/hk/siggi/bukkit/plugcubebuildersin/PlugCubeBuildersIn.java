@@ -3166,6 +3166,9 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				if (name.length() > 512) {
 					return true;
 				}
+				if (name.contains("Server Creeper")) {
+					return true;
+				}
 			}
 			String customName = display.getString("CustomName");
 			if (customName != null) {
