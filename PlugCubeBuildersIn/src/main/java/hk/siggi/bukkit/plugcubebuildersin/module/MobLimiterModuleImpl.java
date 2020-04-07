@@ -161,12 +161,10 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		int limit = 8;
 		int limitNearby = 50;
 		switch (spawnReason) {
+			case BREEDING:
 			case SPAWNER:
 				limit = 15;
-				limitNearby = 72;
-				break;
-			case BREEDING:
-				limit = 12;
+				limitNearby = -1;
 				break;
 			case BUILD_IRONGOLEM:
 			case BUILD_SNOWMAN:
@@ -211,6 +209,7 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 		if (entitiesToCount.size() >= limit) {
 			return false;
 		}
+		if (limitNearby == -1) {return true;}
 		int cX = chunk.getX();
 		int cZ = chunk.getZ();
 		for (int chunkZ = cZ - 1; chunkZ <= cZ + 1; chunkZ++) {
