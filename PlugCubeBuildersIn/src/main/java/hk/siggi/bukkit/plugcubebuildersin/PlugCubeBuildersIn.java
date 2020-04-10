@@ -1714,8 +1714,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			return;
 		}
 		if (message.endsWith("fell from a high place") || message.contains("fell off")) {
-			//event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " went SPLAT!");
-			event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " did a Vintage Beef!");
+			event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " went SPLAT!");
+			//event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " did a Vintage Beef!");
 		} else if (message.toLowerCase().contains("was blown up by creeper")) {
 			event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " got creeped!");
 		} else if (message.toLowerCase().contains("fell out of the world")) {
