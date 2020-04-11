@@ -167,10 +167,14 @@ public class MobLimiterModuleImpl implements MobLimiterModule, Listener {
 	}
 
 	private void filter(Set<LivingEntity> entities, boolean monster) {
-		if (monster) {
-			entities.removeIf((entity) -> !(entity instanceof Monster));
-		} else {
-			entities.removeIf((entity) -> (entity instanceof Monster));
+		try {
+			if (monster) {
+				entities.removeIf((entity) -> !(entity instanceof Monster));
+			} else {
+				entities.removeIf((entity) -> (entity instanceof Monster));
+			}
+		} catch (UnsupportedOperationException uoe) {
+			// it's probably an unmodifiable empty set and so doesn't matter
 		}
 	}
 
