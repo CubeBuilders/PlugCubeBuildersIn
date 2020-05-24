@@ -2074,16 +2074,12 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				return null;
 			}
 			GameProfile gameProfile = new GameProfile(uuid, name);
-			BufferedReader reader = null;
 			String value = null;
 			String signature = null;
-			try {
-				reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getTextureCacheDir(), (uuid.toString().replace("-", "").toLowerCase()) + ".txt"))));
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getTextureCacheDir(), (uuid.toString().replace("-", "").toLowerCase()) + ".txt"))))) {
 				value = reader.readLine();
 				signature = reader.readLine();
 			} catch (Exception e) {
-			} finally {
-				tryClose(reader);
 			}
 			if (value != null && signature != null) {
 				gameProfile.getProperties().put("textures", new Property("textures", value, signature));
@@ -2144,10 +2140,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				}
 				internalEntityField = clazz.getDeclaredField("entity");
 			}
-			boolean oldAccessible = internalEntityField.isAccessible();
 			internalEntityField.setAccessible(true);
 			Object o = internalEntityField.get(p);
-			internalEntityField.setAccessible(false);
 			return o;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			reportProblem("Could not get internal entity for Player", e);
@@ -3512,38 +3506,42 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	}
 
 	public ItemStack createSkull(Player p) {
-		UUID player = p.getUniqueId();
-		String name = p.getName();
+		return createSkull(getGameProfile(p));
+	}
+
+	public ItemStack createSkull(UUID player) {
+		String name = getUUIDCache().getNameFromUUID(player);
+		if (name == null) {
+			return new ItemStack(Material.PLAYER_HEAD, 1);
+		}
+		return createSkull(getGameProfile(new GameProfile(player, name)));
+	}
+
+	public ItemStack createSkull(GameProfile gameProfile) {
+		if (gameProfile == null) {
+			return new ItemStack(Material.PLAYER_HEAD, 1);
+		}
+		UUID player = gameProfile.getId();
+		String name = gameProfile.getName();
 		String textures = null;
 		String texturesSignature = null;
-		GameProfile gameProfile = getGameProfile(p);
-		if (gameProfile != null) {
-			Collection<Property> texturesProperty = gameProfile.getProperties().get("textures");
-			if (texturesProperty != null) {
-				Iterator<Property> iterator = texturesProperty.iterator();
-				if (iterator.hasNext()) {
-					Property prop = iterator.next();
-					if (prop != null) {
-						textures = prop.getValue();
-						texturesSignature = prop.getSignature();
-					}
+		Collection<Property> texturesProperty = gameProfile.getProperties().get("textures");
+		if (texturesProperty != null) {
+			Iterator<Property> iterator = texturesProperty.iterator();
+			if (iterator.hasNext()) {
+				Property prop = iterator.next();
+				if (prop != null) {
+					textures = prop.getValue();
+					texturesSignature = prop.getSignature();
 				}
 			}
 		}
 		return createSkull(player, name, textures, texturesSignature);
 	}
 
-	private ItemStack createHumanSkull() {
-		try {
-			return new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
-		} catch (Throwable e) {
-			return new ItemStack(Material.getMaterial("SKULL_ITEM"), 1);
-		}
-	}
-
 	public ItemStack createSkull(UUID player, String name, String textures, String texturesSignature) {
 		NBTUtil util = NBTTool.getUtil();
-		ItemStack stack = createHumanSkull();
+		ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
 		NBTCompound compound = util.newCompound();
 		NBTCompound skullOwner = util.newCompound();
 		if (player != null) {
