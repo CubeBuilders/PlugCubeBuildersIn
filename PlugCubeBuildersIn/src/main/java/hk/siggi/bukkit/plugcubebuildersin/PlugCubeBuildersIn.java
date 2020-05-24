@@ -1273,13 +1273,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				continue;
 			}
 			//hide now, we'll unhide later!
-			if (Util.is1_12OrNewer()) {
-				p.hidePlayer(this, pp);
-				pp.hidePlayer(this, p);
-			} else {
-				p.hidePlayer(pp);
-				pp.hidePlayer(p);
-			}
+			p.hidePlayer(this, pp);
+			pp.hidePlayer(this, p);
 		}
 		boolean goToSpawn = spawnOnLogin;
 		String lobbyWarpRequest = getLobbyWarpRequest(p.getUniqueId());
@@ -1350,7 +1345,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		List<Player> players = new LinkedList<>();
 		players.addAll(getServer().getOnlinePlayers());
 		int s = players.size();
-		boolean is112 = Util.is1_12OrNewer();
 		for (int a = 0; a < s; a++) {
 			for (int b = a + 1; b < s; b++) {
 				Player p1 = players.get(a);
@@ -1387,30 +1381,14 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 					showP2toP1 = false;
 				}
 				if (showP2toP1 || p1Session.forceShowAll) {
-					if (is112) {
-						p1.showPlayer(this, p2);
-					} else {
-						p1.showPlayer(p2);
-					}
+					p1.showPlayer(this, p2);
 				} else {
-					if (is112) {
-						p1.hidePlayer(this, p2);
-					} else {
-						p1.hidePlayer(p2);
-					}
+					p1.hidePlayer(this, p2);
 				}
 				if (showP1toP2 || p2Session.forceShowAll) {
-					if (is112) {
-						p2.showPlayer(this, p1);
-					} else {
-						p2.showPlayer(p1);
-					}
+					p2.showPlayer(this, p1);
 				} else {
-					if (is112) {
-						p2.hidePlayer(this, p1);
-					} else {
-						p2.hidePlayer(p1);
-					}
+					p2.hidePlayer(this, p1);
 				}
 			}
 		}
