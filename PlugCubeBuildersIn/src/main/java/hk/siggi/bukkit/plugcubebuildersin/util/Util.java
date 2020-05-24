@@ -251,24 +251,31 @@ public class Util {
 		return a.equals(b);
 	}
 
-	private static void determineVersion() {
-		Server server = Bukkit.getServer();
-		String name = server.getClass().getName();
-		int pos = name.indexOf(".v");
-		int x = pos + 2;
-		int y = name.indexOf("_", x);
-		int z = name.indexOf("_R", y + 1);
-		int w = name.indexOf(".", z + 2);
-		versionMajor = Integer.parseInt(name.substring(x, y));
-		versionMinor = Integer.parseInt(name.substring(y + 1, z));
-		versionR = Integer.parseInt(name.substring(z + 2, w));
+	static {
+		int major;
+		int minor;
+		int r;
+		try {
+			Server server = Bukkit.getServer();
+			String name = server.getClass().getName();
+			int pos = name.indexOf(".v");
+			int x = pos + 2;
+			int y = name.indexOf("_", x);
+			int z = name.indexOf("_R", y + 1);
+			int w = name.indexOf(".", z + 2);
+			major = Integer.parseInt(name.substring(x, y));
+			minor = Integer.parseInt(name.substring(y + 1, z));
+			r = Integer.parseInt(name.substring(z + 2, w));
+		} catch (Exception e) {
+			major = 0;
+			minor = 0;
+			r = 0;
+		}
+		versionMajor = major;
+		versionMinor = minor;
+		versionR = r;
 	}
-	private static int versionMajor = 0;
-	private static int versionMinor = 0;
-	private static int versionR = 0;
-
-	public static boolean is1_12OrNewer() {
-		determineVersion();
-		return (versionMajor > 1) || (versionMajor == 1 && versionMinor >= 12);
-	}
+	public static final int versionMajor;
+	public static final int versionMinor;
+	public static final int versionR;
 }
