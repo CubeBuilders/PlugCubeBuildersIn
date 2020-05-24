@@ -71,7 +71,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -133,15 +132,11 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
@@ -151,7 +146,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRegisterChannelEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
@@ -1361,8 +1355,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			for (int b = a + 1; b < s; b++) {
 				Player p1 = players.get(a);
 				Player p2 = players.get(b);
-				boolean p1Spectator = isSpectator(p1);
-				boolean p2Spectator = isSpectator(p2);
 				boolean p1Vanish = isVanished(p1);
 				boolean p2Vanish = isVanished(p2);
 				boolean p1CanSeeVanished = p1.hasPermission("hk.siggi.plugcubebuildersin.seehiddenplayers");
@@ -1373,12 +1365,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				PlayerSession p2Session = getSession(p2);
 				if (!p1Session.canHandleVanish() || !p2Session.canHandleVanish()) {
 					continue;
-				}
-				if (p1Spectator) {
-					showP1toP2 = p2Spectator && spectatorsCanSeeOtherSpectators;
-				}
-				if (p2Spectator) {
-					showP2toP1 = p1Spectator && spectatorsCanSeeOtherSpectators;
 				}
 				for (PlayerVanisher vanisher : vanishers) {
 					try {
@@ -1667,7 +1653,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		 event.setQuitMessage(null);
 		 }*/
 		event.setQuitMessage(null);
-		removeSpectator(p);
 		int playerCount = getServer().getOnlinePlayers().size() - 1;
 		updatePlayers(playerCount);
 		playerSessions.remove(p.getUniqueId());
@@ -2578,108 +2563,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 	}
 
-	@Deprecated
-	public void addSpectator(Player p) {
-		for (Iterator<WeakReference<Player>> it = spectators.iterator(); it.hasNext();) {
-			WeakReference<Player> pl = it.next();
-			Player pp = pl.get();
-			if (pp == null) {
-				it.remove();
-			}
-			if (pp == p) {
-				return;
-			}
-		}
-		spectators.add(new WeakReference<>(p));
-	}
-
-	@Deprecated
-	public void removeSpectator(Player p) {
-		for (Iterator<WeakReference<Player>> it = spectators.iterator(); it.hasNext();) {
-			WeakReference<Player> pl = it.next();
-			Player pp = pl.get();
-			if (pp == null || pp == p) {
-				it.remove();
-			}
-		}
-	}
-
-	@Deprecated
-	public boolean isSpectator(Player p) {
-		for (Iterator<WeakReference<Player>> it = spectators.iterator(); it.hasNext();) {
-			WeakReference<Player> pl = it.next();
-			Player pp = pl.get();
-			if (pp == null) {
-				it.remove();
-			}
-			if (pp == p) {
-				return true;
-			}
-		}
-		return false;
-	}
-	private final List<WeakReference<Player>> spectators = new LinkedList<>();
-
-	@Deprecated
-	public void preJoinMinigame(Player p) {
-		/*preJoinMinigame(p, true);*/
-	}
-
-	@Deprecated
-	public void preJoinMinigame(Player p, boolean teleport) {
-		/*if (isVanished(p)) {
-		 throw new RuntimeException("Cannot join minigame as vanished player.");
-		 }
-		 if (teleport) {
-		 spawn(p);
-		 }
-		 removeSpectator(p);
-		 p.setGameMode(GameMode.SURVIVAL);
-		 p.setFlying(false);
-		 p.setAllowFlight(false);
-		 Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
-		 for (Player player : onlinePlayers) {
-		 player.showPlayer(p);
-		 }*/
-	}
-
-	@Deprecated
-	public void enterSpectatorMode(Player p) {
-		/*addSpectator(p);
-		 p.setGameMode(GameMode.ADVENTURE);
-		 p.setAllowFlight(true);
-		 p.setFlying(true);
-		 Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
-		 for (Player player : onlinePlayers) {
-		 player.hidePlayer(p);
-		 }
-		 spawn(p);*/
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorBucketFill(PlayerBucketFillEvent event) {
-		if (isSpectator(event.getPlayer()) || isVanishProtected(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void spectatorDrop(PlayerDropItemEvent event) {
-		if (isSpectator(event.getPlayer()) || isVanishProtected(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorFoodChange(FoodLevelChangeEvent event) {
-		if ((event.getEntity() instanceof Player)) {
-			Player player = (Player) event.getEntity();
-			if (isSpectator(player) || isVanished(player)) {
-				event.setCancelled(true);
-			}
-		}
-	}
-
 	@EventHandler
 	public void playerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
@@ -2844,49 +2727,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void spectatorPlayerInteract(PlayerInteractEvent event) {
-		if (isSpectator(event.getPlayer()) || isVanishProtected(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void spectatorPlayerPickupItem(PlayerPickupItemEvent event) {
-		if (isSpectator(event.getPlayer()) || isVanishProtected(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorShear(PlayerShearEntityEvent event) {
-		if (isSpectator(event.getPlayer()) || isVanishProtected(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorBreakPainting(HangingBreakEvent event) {
-		if (event instanceof HangingBreakByEntityEvent) {
-			Entity entity = ((HangingBreakByEntityEvent) event).getRemover();
-			if (entity instanceof Player) {
-				if (isSpectator((Player) entity) || isVanishProtected((Player) entity)) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorBreakPainting(HangingBreakByEntityEvent event) {
-		Entity entity = event.getRemover();
-		if (entity instanceof Player) {
-			if (isSpectator((Player) entity) || isVanishProtected((Player) entity)) {
-				event.setCancelled(true);
-			}
-		}
-	}
-
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void placeItemFrame(HangingPlaceEvent event) {
 		Hanging hanging = event.getEntity();
@@ -2941,7 +2781,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	public void spectatorEntityDamage(EntityDamageEvent event) {
 		Entity smacked = event.getEntity();
 		if ((smacked instanceof Player)) {
-			if (isSpectator((Player) smacked) || isVanished((Player) smacked)) {
+			if (isVanished((Player) smacked)) {
 				event.setCancelled(true);
 			}
 		}
@@ -2958,7 +2798,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				}
 			}
 			if (player != null) {
-				if (isSpectator(player) || isVanished(player)) {
+				if (isVanished(player)) {
 					event.setCancelled(true);
 				}
 			}
@@ -2968,7 +2808,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	@EventHandler(ignoreCancelled = true)
 	public void spectatorEntityTarget(EntityTargetEvent event) {
 		if (event.getTarget() instanceof Player) {
-			if (isSpectator((Player) event.getTarget()) || isVanished((Player) event.getTarget())) {
+			if (isVanished((Player) event.getTarget())) {
 				event.setCancelled(true);
 			}
 		}
@@ -2978,7 +2818,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	public void spectatorVehicleDestroy(VehicleDestroyEvent event) {
 		Entity entity = event.getAttacker();
 		if (entity instanceof Player) {
-			if (isSpectator((Player) entity) || isVanishProtected((Player) entity)) {
+			if (isVanishProtected((Player) entity)) {
 				event.setCancelled(true);
 			}
 		}
@@ -2987,7 +2827,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	@EventHandler(ignoreCancelled = true)
 	public void spectatorVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 		if (event.getEntity() instanceof Player) {
-			if (isSpectator((Player) event.getEntity()) || isVanished((Player) event.getEntity())) {
+			if (isVanished((Player) event.getEntity())) {
 				event.setCancelled(true);
 			}
 		}
