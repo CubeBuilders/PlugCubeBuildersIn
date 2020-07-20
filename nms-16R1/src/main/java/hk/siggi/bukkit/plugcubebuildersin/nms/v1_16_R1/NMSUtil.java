@@ -32,6 +32,7 @@ import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Husk;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Pillager;
 import org.bukkit.entity.Player;
@@ -160,7 +161,11 @@ public class NMSUtil extends hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil<Pack
 
 	@Override
 	public boolean isHostile(LivingEntity entity) {
-		if (entity instanceof Blaze) {
+		if (entity instanceof Monster) {
+			return true;
+			// a lot of below are subinterfaces of Monster
+			// should remove them
+		} else if (entity instanceof Blaze) {
 			return true;
 		} else if (entity instanceof Spider) {
 			return true;
