@@ -47,11 +47,9 @@ public class MobUtility {
 				String mob = name.substring(name.length() - 10);
 				EntityType entityType;
 
-				// Only Mooshroom and Zombie Pigman mismatch
+				// Only Mooshroom mismatches
 				if (mob.equals("MOOSHROOM")) {
 					entityType = EntityType.MUSHROOM_COW;
-				} else if (mob.equals("ZOMBIE_PIGMAN")) {
-					entityType = EntityType.PIG_ZOMBIE;
 				} else {
 					entityType = EntityType.valueOf(mob);
 				}

@@ -1886,8 +1886,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 					name = "Ocelot";
 				} else if (type == EntityType.PIG) {
 					name = "Pig";
-				} else if (type == EntityType.PIG_ZOMBIE) {
-					name = "Pig Zombie";
+				} else if (type == EntityType.ZOMBIFIED_PIGLIN) {
+					name = "Zombified Piglin";
 				} else if (type == EntityType.SHEEP) {
 					name = "Sheep";
 				} else if (type == EntityType.SKELETON) {
