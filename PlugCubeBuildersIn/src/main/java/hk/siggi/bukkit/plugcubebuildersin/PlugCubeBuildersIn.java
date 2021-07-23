@@ -245,7 +245,11 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	private final HashMap<UUID, PlayerSession> playerSessions = new HashMap<>();
 
 	public PlayerSession getSession(Player p) {
-		return playerSessions.get(p.getUniqueId());
+		PlayerSession playerSession = playerSessions.get(p.getUniqueId());
+		if (playerSession == null && p.isOnline()) {
+			playerSessions.put(p.getUniqueId(), playerSession = new PlayerSession(this, p));
+		}
+		return playerSession;
 	}
 
 	public PlayerSession getSession(UUID p) {
