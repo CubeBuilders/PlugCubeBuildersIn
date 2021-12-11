@@ -144,11 +144,11 @@ public class NMSUtil extends hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil<Pack
 		int z = tag.getInt("z");
 		BlockPosition bp = new BlockPosition(x, y, z);
 		if (gameProfile == null) {
-			tag.remove("Owner");
+			tag.remove("SkullOwner");
 		} else {
 			NBTTagCompound gameProfileTag = new NBTTagCompound();
 			GameProfileSerializer.serialize(gameProfileTag, gameProfile);
-			tag.set("Owner", gameProfileTag);
+			tag.set("SkullOwner", gameProfileTag);
 		}
 		PacketPlayOutTileEntityData updatePacket = new PacketPlayOutTileEntityData(bp, 4, tag);
 		return updatePacket;
