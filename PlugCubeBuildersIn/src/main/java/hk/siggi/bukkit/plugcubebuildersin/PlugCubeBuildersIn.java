@@ -1348,6 +1348,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 		List<Player> players = new LinkedList<>();
 		players.addAll(getServer().getOnlinePlayers());
+		EssentialsModule essentials = getModule(EssentialsModule.class);
 		int s = players.size();
 		for (int a = 0; a < s; a++) {
 			for (int b = a + 1; b < s; b++) {
@@ -1386,11 +1387,17 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				}
 				if (showP2toP1 || p1Session.forceShowAll) {
 					p1.showPlayer(this, p2);
+					if (essentials != null) {
+						essentials.makePlayerSeePlayer(p1, p2);
+					}
 				} else {
 					p1.hidePlayer(this, p2);
 				}
 				if (showP1toP2 || p2Session.forceShowAll) {
 					p2.showPlayer(this, p1);
+					if (essentials != null) {
+						essentials.makePlayerSeePlayer(p2, p1);
+					}
 				} else {
 					p2.hidePlayer(this, p1);
 				}

@@ -11,4 +11,5 @@ public interface EssentialsModule extends Module, BankModule {
 	public void setNickname(UUID p, String nick);
 	public void setGodmode(Player p, boolean godmode);
 	public boolean isGodmode(Player p);
+	public void makePlayerSeePlayer(Player p1, Player p2);
 }

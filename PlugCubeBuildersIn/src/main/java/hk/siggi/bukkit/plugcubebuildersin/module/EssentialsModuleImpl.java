@@ -140,4 +140,9 @@ public class EssentialsModuleImpl implements EssentialsModule {
 	public boolean isGodmode(Player p) {
 		return essentials.getUser(p).isGodModeEnabled();
 	}
+
+	@Override
+	public void makePlayerSeePlayer(Player p1, Player p2) {
+		p1.showPlayer(essentials, p2);
+	}
 }
