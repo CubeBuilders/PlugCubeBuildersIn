@@ -2,7 +2,7 @@ package hk.siggi.bukkit.plugcubebuildersin.commands;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.zcore.persist.MemoryBoard;
+import com.massivecraft.factions.data.MemoryBoard;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
 import java.lang.reflect.Field;
 import java.util.ArrayList;

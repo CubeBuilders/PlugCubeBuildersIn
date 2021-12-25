@@ -6,8 +6,8 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.perms.Relation;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,11 +16,11 @@ import org.bukkit.entity.Player;
 public class FactionsTeleportControlSystem implements TeleportControlSystem {
 
 	public final PlugCubeBuildersIn plugin;
-	public final P factions;
+	public final FactionsPlugin factions;
 
 	public FactionsTeleportControlSystem(PlugCubeBuildersIn plugin) {
 		this.plugin = plugin;
-		factions = (P) plugin.getServer().getPluginManager().getPlugin("Factions");
+		factions = (FactionsPlugin) plugin.getServer().getPluginManager().getPlugin("Factions");
 	}
 
 	@Override

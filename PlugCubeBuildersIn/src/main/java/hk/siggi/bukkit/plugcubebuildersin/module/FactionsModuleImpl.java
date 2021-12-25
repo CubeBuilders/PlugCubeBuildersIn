@@ -1,19 +1,20 @@
 package hk.siggi.bukkit.plugcubebuildersin.module;
 
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.event.FactionCreateEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import com.massivecraft.factions.event.FactionRenameEvent;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
 import hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil;
+
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,53 +27,64 @@ import org.bukkit.event.EventPriority;
 
 public class FactionsModuleImpl implements FactionsModule {
 
-	public Properties lastCreatedFaction = new Properties();
-	public Properties lastRenamedFaction = new Properties();
+	public Map<Faction,Long> factionCreationTime = new HashMap<>();
+	public Map<Faction,Long> factionRenameTime = new HashMap<>();
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void createdFaction(FactionCreateEvent event) {
-		long lastCreated = 0L;
-		try {
-			lastCreated = Long.parseLong(lastCreatedFaction.getProperty(event.getFPlayer().getPlayer().getName()));
-		} catch (Exception e) {
-		}
 		long now = System.currentTimeMillis();
-		if (!event.getFPlayer().getPlayer().hasPermission("hk.siggi.plugcubebuildersin.bypassfactionthrottle") && now - lastCreated < 1200000L) {
-			event.setCancelled(true);
-			event.getFPlayer().getPlayer().sendMessage(ChatColor.RED + "You only recently created a new faction.");
-			event.getFPlayer().getPlayer().sendMessage(ChatColor.RED + "Please wait at least 20 minutes before creating another one.");
-		} else {
-			lastCreatedFaction.setProperty(event.getFPlayer().getPlayer().getName(), Long.toString(now));
-		}
+		Faction faction = event.getFaction();
+		factionCreationTime.put(faction, now);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void disbandedFaction(FactionDisbandEvent event) {
+		long now = System.currentTimeMillis();
+		Faction faction = event.getFaction();
+		long creationTime = 0L;
 		try {
-			lastRenamedFaction.remove(event.getFaction().getId());
+			creationTime = factionCreationTime.get(faction);
 		} catch (Exception e) {
+		}
+		if (!event.getPlayer().hasPermission("hk.siggi.plugcubebuildersin.bypassfactionthrottle") && now - creationTime < 1200000L) {
+			event.setCancelled(true);
+			event.getFPlayer().getPlayer().sendMessage(ChatColor.RED + "Your faction was only recently created.");
+			event.getFPlayer().getPlayer().sendMessage(ChatColor.RED + "Please wait at least 20 minutes before disbanding it.");
+		} else {
+			factionCreationTime.remove(faction);
+			factionRenameTime.remove(faction);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void renameFaction(FactionRenameEvent event) {
-		long lastRenamed = 0L;
+		long now = System.currentTimeMillis();
+		Faction faction = event.getFaction();
+		long creationTime = 0L;
 		try {
-			lastRenamed = Long.parseLong(lastRenamedFaction.getProperty(event.getFaction().getId()));
+			creationTime = factionCreationTime.get(faction);
 		} catch (Exception e) {
 		}
-		long now = System.currentTimeMillis();
-		if (!event.getfPlayer().getPlayer().hasPermission("hk.siggi.plugcubebuildersin.bypassfactionthrottle") && now - lastRenamed < 1200000L) {
+		long lastRenamed = 0L;
+		try {
+			lastRenamed = factionRenameTime.get(faction);
+		} catch (Exception e) {
+		}
+		if (!event.getfPlayer().getPlayer().hasPermission("hk.siggi.plugcubebuildersin.bypassfactionthrottle") && now - creationTime < 1200000L) {
+			event.setCancelled(true);
+			event.getfPlayer().getPlayer().sendMessage(ChatColor.RED + "Your faction was only recently created.");
+			event.getfPlayer().getPlayer().sendMessage(ChatColor.RED + "Please wait at least 20 minutes before renaming it.");
+		} else if (!event.getfPlayer().getPlayer().hasPermission("hk.siggi.plugcubebuildersin.bypassfactionthrottle") && now - lastRenamed < 1200000L) {
 			event.setCancelled(true);
 			event.getfPlayer().getPlayer().sendMessage(ChatColor.RED + "Your faction was only recently renamed.");
 			event.getfPlayer().getPlayer().sendMessage(ChatColor.RED + "Please wait at least 20 minutes before renaming it again.");
 		} else {
-			lastRenamedFaction.setProperty(event.getFaction().getId(), Long.toString(now));
+			factionRenameTime.put(faction, now);
 		}
 	}
 
 	private PlugCubeBuildersIn plugin;
-	private P factions;
+	private FactionsPlugin factions;
 
 	@Override
 	public void load(PlugCubeBuildersIn plugin) {
@@ -82,7 +94,7 @@ public class FactionsModuleImpl implements FactionsModule {
 	@Override
 	public void init() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		factions = (P) plugin.getServer().getPluginManager().getPlugin("Factions");
+		factions = (FactionsPlugin) plugin.getServer().getPluginManager().getPlugin("Factions");
 	}
 
 	@Override
@@ -148,17 +160,17 @@ public class FactionsModuleImpl implements FactionsModule {
 
 	@Override
 	public double getMinimumPower() {
-		return Conf.powerPlayerMin;
+		return factions.getConfigManager().getMainConfig().factions().landRaidControl().power().getPlayerMin();
 	}
 
 	@Override
 	public double getMaximumPower() {
-		return Conf.powerPlayerMax;
+		return factions.getConfigManager().getMainConfig().factions().landRaidControl().power().getPlayerMax();
 	}
 
 	@Override
 	public double getDefaultPower() {
-		return Conf.powerPlayerStarting;
+		return factions.getConfigManager().getMainConfig().factions().landRaidControl().power().getPlayerStarting();
 	}
 
 	@Override
