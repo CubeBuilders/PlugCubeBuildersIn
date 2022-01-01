@@ -91,7 +91,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -587,7 +586,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			reportProblem("Couldn't load variables.txt", e);
 		}
 		variableUpdaters = vu.toArray(new VariableUpdater[vu.size()]);
-		setupPermissions();
 		File dataFolder = getDataFolder();
 		if (!dataFolder.isDirectory()) {
 			if (dataFolder.exists()) {
@@ -2054,16 +2052,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				}
 			}
 		}
-	}
-
-	private Permission permission = null;
-
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null) {
-			permission = permissionProvider.getProvider();
-		}
-		return (permission != null);
 	}
 
 	/**
