@@ -281,13 +281,11 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		return getUUIDCache().getUUIDFromName(player);
 	}
 
-	//private OffenceManager offenceManager = null;
 	public static PlugCubeBuildersIn getInstance() {
 		return instance;
 	}
 	private boolean spawnOnLogin = false;
 	public boolean staffPrivilegeToggle = false;
-	//private Citizens citizens = null;
 	private final Properties loginTimes = new Properties();
 	private boolean runningRunnable = false;
 	private String[] spawnEggProtectionWorlds = null;
@@ -596,7 +594,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		uuidCache = new UUIDCache(new File(getDataFolder(), "UUIDs.txt"));
 		nicknameCache = new NicknameCache();
 		playerNameHandler = new PlayerNameHandler(this);
-		//startTheEndTimer();
 		loginTimes.clear();
 		runningRunnable = false;
 		PluginManager pm = getServer().getPluginManager();
@@ -746,9 +743,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 		pluginEnabled = false;
 		cubeTokens = getCubeTokens = chargeCubeTokens = giveCubeTokens = null;
-		//getUUIDCache().saveData(); // commented because we don't need to save when it already autosaves
-		//offenceManager.close();
-		//offenceManager = null;
 		updatingPlayerCount = true;
 		setVariable("players", "---------------");
 		setVariable("status", "Server Offline");
@@ -1288,36 +1282,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		if (goToSpawn) {
 			spawn(p);
 		}
-		/*Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
-		 boolean imASpectator = isSpectator(p);
-		 boolean imVanished = isVanished(p);
-		 for (Player player : onlinePlayers) {
-		 if (player == p) {
-		 continue;
-		 }
-		 if (imASpectator) {
-		 player.hidePlayer(p);
-		 } else {
-		 player.showPlayer(p);
-		 }
-		 if (isSpectator(player)) {
-		 p.hidePlayer(player);
-		 } else {
-		 p.showPlayer(player);
-		 }
-		 try {
-		 if (imVanished && !player.hasPermission("hk.siggi.plugcubebuildersin.seehiddenplayers")) {
-		 player.hidePlayer(p);
-		 }
-		 } catch (Exception e) {
-		 }
-		 try {
-		 if (isVanished(player) && !p.hasPermission("hk.siggi.plugcubebuildersin.seehiddenplayers")) {
-		 p.hidePlayer(player);
-		 }
-		 } catch (Exception e) {
-		 }
-		 }*/
 	}
 
 	private boolean spectatorsCanSeeOtherSpectators = false;
@@ -1436,13 +1400,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			}.runTaskTimer(this, 1, 1);
 		}
 		boolean vanished = isVanished(p);
-		/*if (vanished) {
-		 event.setJoinMessage(null);
-		 } else if (joinMessage != null) {
-		 event.setJoinMessage(joinMessage.replaceAll("\\[player\\]", p.getName()));
-		 } else {
-		 event.setJoinMessage(null);
-		 }*/
 		event.setJoinMessage(null);
 		int playerCount = getServer().getOnlinePlayers().size();
 		updatePlayers(playerCount);
@@ -1632,13 +1589,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		lastSuicide.remove(p);
 		lastDeath.remove(p);
 		suicideCost.remove(p);
-		/*if (isVanished(p) || (now - session.unvanishTime) < 5000L) {
-		 event.setQuitMessage(null);
-		 } else if (quitMessage != null) {
-		 event.setQuitMessage(quitMessage.replaceAll("\\[player\\]", p.getName()));
-		 } else {
-		 event.setQuitMessage(null);
-		 }*/
 		event.setQuitMessage(null);
 		int playerCount = getServer().getOnlinePlayers().size() - 1;
 		updatePlayers(playerCount);
@@ -1687,7 +1637,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 		if (message.endsWith("fell from a high place") || message.contains("fell off")) {
 			event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " went SPLAT!");
-			//event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " did a Vintage Beef!");
 		} else if (message.toLowerCase().contains("was blown up by creeper")) {
 			event.setDeathMessage(message.substring(0, message.indexOf(" ")) + " got creeped!");
 		} else if (message.toLowerCase().contains("fell out of the world")) {
@@ -2944,7 +2893,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 		NBTCompound wurst = tag.getCompound("www.wurst-client.tk");
 		if (wurst != null) {
-			NBTList list = wurst.getList("www.wurst-client.tk"); // WurstClient
+			NBTList list = wurst.getList("www.wurst-client.tk");
 			if (list != null) {
 				if (list.size() >= 1) {
 					return true;
@@ -2953,7 +2902,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 		NBTCompound wurst2 = tag.getCompound("www.wurstclient.net");
 		if (wurst2 != null) {
-			NBTList list = wurst2.getList("www.wurstclient.net"); // WurstClient
+			NBTList list = wurst2.getList("www.wurstclient.net");
 			if (list != null) {
 				if (list.size() >= 1) {
 					return true;
@@ -3252,16 +3201,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 								PlayerSession session = getSession(pToUnhide);
 								session.unvanishTime = now;
 								updateVanishedStatus(pToUnhide, false);
-								/*for (Player player : onlinePlayers) {
-								 if (player == pToUnhide) {
-								 continue;
-								 }
-								 try {
-								 player.showPlayer(pToUnhide);
-								 } catch (Exception e) {
-								 reportProblem("Could not show player", e);
-								 }
-								 }*/
 							} catch (Exception e) {
 								reportProblem("Error occurred processing vanish", e);
 							}
@@ -3276,18 +3215,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 									continue;
 								}
 								updateVanishedStatus(pToHide, true);
-								/*for (Player player : onlinePlayers) {
-								 if (player == pToHide) {
-								 continue;
-								 }
-								 try {
-								 if (!player.hasPermission("hk.siggi.plugcubebuildersin.seehiddenplayers")) {
-								 player.hidePlayer(pToHide);
-								 }
-								 } catch (Exception e) {
-								 reportProblem("Could not hide player", e);
-								 }
-								 }*/
 							} catch (Exception e) {
 								reportProblem("Error occurred processing vanish", e);
 							}
