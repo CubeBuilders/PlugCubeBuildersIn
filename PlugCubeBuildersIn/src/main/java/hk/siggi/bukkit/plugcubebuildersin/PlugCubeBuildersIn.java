@@ -1386,9 +1386,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	public void playerJoined(PlayerJoinEvent event) {
 		final Player p = event.getPlayer();
 		p.setOp(false);
-		PlayerSession session;
-		playerSessions.put(p.getUniqueId(), session = new PlayerSession(this, p));
-		session.loginTime = System.currentTimeMillis();
+		getSession(p).loginTime = System.currentTimeMillis();
 		if (!runningRunnable) {
 			runningRunnable = true;
 			new BukkitRunnable() {
