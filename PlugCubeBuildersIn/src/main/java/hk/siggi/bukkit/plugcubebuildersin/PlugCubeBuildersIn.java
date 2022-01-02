@@ -169,53 +169,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 
 	private int tick = 0;
 
-	public void corruptedChunk(String worldName, int chunkX, int chunkZ) {
-		String chunkID = worldName + "," + chunkX + "," + chunkZ;
-		if (!corruptedChunks.contains(chunkID)) {
-			corruptedChunks.add(chunkID);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void loadingACorruptedChunk(ChunkLoadEvent event) {
-		Chunk chunk = event.getChunk();
-		String worldName = chunk.getWorld().getName();
-		int chunkX = chunk.getX();
-		int chunkZ = chunk.getZ();
-		int regionX = chunkX >> 5;
-		int regionZ = chunkZ >> 5;
-		String chunkID = worldName + "," + chunkX + "," + chunkZ;
-		if (!corruptedChunks.contains(chunkID)) {
-			return;
-		}
-		File dir = new File("corruptedregions" + File.separator + worldName);
-		if (!dir.isDirectory()) {
-			if (dir.isFile()) {
-				dir.mkdirs();
-			}
-		}
-		File dest = new File(dir, "r." + regionX + "," + regionZ + ".mca");
-		for (int i = 1; dest.exists(); i++) {
-			dest = new File(dir, "r." + regionX + "," + regionZ + "." + i + ".mca");
-		}
-		FileInputStream in = null;
-		FileOutputStream out = null;
-		try {
-			in = new FileInputStream(worldName + File.separator + "region" + File.separator + "r." + regionX + "," + regionZ + ".mca");
-			out = new FileOutputStream(dest);
-			byte[] b = new byte[4096];
-			int c;
-			while ((c = in.read(b, 0, b.length)) != -1) {
-				out.write(b, 0, c);
-			}
-			in.close();
-			out.close();
-		} catch (Exception e) {
-		} finally {
-			tryClose(in, out);
-		}
-	}
-
 	@EventHandler
 	public void loadChunk(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
@@ -1920,32 +1873,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 	}
 	boolean canOpenTheEnd = false;
-
-	public void startTheEndTimer() {
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(getDataFolder(), "canopentheend.txt"))));
-			canOpenTheEnd = reader.readLine().equalsIgnoreCase("true");
-		} catch (Exception e) {
-		}
-		BukkitRunnable runnable = new BukkitRunnable() {
-			long previousTime = timeToOpeningTheEnd();
-			boolean flip = false;
-			boolean barOn = false;
-			long endOpen = -1L;
-
-			@Override
-			public void run() {
-				flip = !flip;
-				long time = timeToOpeningTheEnd();
-				if (previousTime < 60000L && time > 86400000L) {
-					// open the end
-				} else {
-
-				}
-			}
-		};
-		runnable.runTaskTimer(this, 20L, 20L);
-	}
 
 	public long timeToOpeningTheEnd() {
 		long now = System.currentTimeMillis();
