@@ -3439,20 +3439,4 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		} catch (Exception e) {
 		}
 	}
-
-	public void postProcessRootCommandNode(Object rootObj) {
-		try {
-			BrigadierUtil bu = NMSUtil.get().getBrigadierUtil();
-			RootCommandNode root = (RootCommandNode) rootObj;
-			root.removeCommand("w");
-			LiteralCommandNode whisper = new LiteralCommandNode("w", null, null, null, null, false);
-			ArgumentCommandNode username = new ArgumentCommandNode("username", StringArgumentType.word(), null, null, null, null, false, bu.suggestionProviderAskServer());
-			ArgumentCommandNode message = new ArgumentCommandNode("message", bu.argumentTypeChat(), null, null, null, null, false, null);
-			username.addChild(message);
-			whisper.addChild(username);
-			root.addChild(whisper);
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
 }
