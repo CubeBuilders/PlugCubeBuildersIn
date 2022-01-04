@@ -119,6 +119,9 @@ public class EssentialsModuleImpl implements EssentialsModule {
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			plugin.reportProblem("Couldn't set player vanish status in Essentials", e);
 		}
+		if (!vanish) {
+			PlugCubeBuildersIn.getInstance().removeEssentialsVanishInvisibility(p);
+		}
 	}
 
 	@Override

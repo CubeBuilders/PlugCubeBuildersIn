@@ -5,10 +5,6 @@ import com.google.gson.stream.JsonToken;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.tree.ArgumentCommandNode;
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.mojang.brigadier.tree.RootCommandNode;
 import hk.siggi.bukkit.nbt.NBTCompound;
 import hk.siggi.bukkit.nbt.NBTList;
 import hk.siggi.bukkit.nbt.NBTTool;
@@ -47,7 +43,6 @@ import hk.siggi.bukkit.plugcubebuildersin.module.VaultModule;
 import hk.siggi.bukkit.plugcubebuildersin.module.WorldLoaderModule;
 import hk.siggi.bukkit.plugcubebuildersin.music.BlockPlayer;
 import hk.siggi.bukkit.plugcubebuildersin.music.MusicPlayer;
-import hk.siggi.bukkit.plugcubebuildersin.nms.BrigadierUtil;
 import hk.siggi.bukkit.plugcubebuildersin.nms.ChatSetting;
 import hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil;
 import hk.siggi.bukkit.plugcubebuildersin.permissionloader.PermissionLoader;
@@ -157,9 +152,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMessageListener, VariableServerConnection.Listener {
@@ -3085,7 +3081,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 	}
 
-	private List<String> vanishedPlayers = new LinkedList<>();
+	private Set<String> vanishedPlayers = new HashSet<>();
 	private final Object vanishLock = new Object();
 
 	public boolean isVanished(Player p) {
@@ -3112,9 +3108,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			public void run() {
 				long now = System.currentTimeMillis();
 				synchronized (vanishLock) {
-					ArrayList<String> newList = new ArrayList<>();
+					Set<String> newList = new HashSet<>();
 					newList.addAll(Arrays.asList(vanished));
-					Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
 					for (String vanishedPlayer : vanishedPlayers) {
 						if (!newList.contains(vanishedPlayer)) {
 							// this player was hidden, but is no longer hidden
@@ -3160,6 +3155,29 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		if (openInv != null) {
 			if (vanish || openInv.getSilentChest(p)) {
 				openInv.setSilentChest(p, vanish);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void teleportedRemoveInvisibility(PlayerTeleportEvent event) {
+		final Player p = event.getPlayer();
+		if (isVanished(p))
+			return;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				removeEssentialsVanishInvisibility(p);
+			}
+		}.runTaskLater(this, 60L);
+	}
+
+	public void removeEssentialsVanishInvisibility(Player p) {
+		PotionEffect invisibility = p.getPotionEffect(PotionEffectType.INVISIBILITY);
+		if (invisibility != null) {
+			int amplifier = invisibility.getAmplifier();
+			if (amplifier >= 1) {
+				p.removePotionEffect(PotionEffectType.INVISIBILITY);
 			}
 		}
 	}
