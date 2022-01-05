@@ -319,7 +319,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 					if (skin == null) {
 						if (movingSkin == null) {
 							if (i >= getMaxSlot(p)) {
-								p.sendMessage(ChatColor.RED + "This is a donator-only slot. Upgrade to use this slot.");
+								p.sendMessage(ChatColor.RED + "Upgrade your rank to use this slot!");
 								return;
 							} else {
 								if (s.mojangSkin == null) {
@@ -332,7 +332,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 							}
 						} else {
 							if (i >= getMaxSlot(p)) {
-								p.sendMessage(ChatColor.RED + "This is a donator-only slot. Upgrade to use this slot.");
+								p.sendMessage(ChatColor.RED + "Upgrade your rank to use this slot!");
 							} else {
 								s.set(i, movingSkin);
 								s.delete(moveIdx);
@@ -343,9 +343,9 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 					} else {
 						if (movingSkin != null && i != moveIdx) {
 							if (i >= getMaxSlot(p)) {
-								p.sendMessage(ChatColor.RED + "Swapping skins to/from donator-only slots requires a donator rank.");
+								p.sendMessage(ChatColor.RED + "Upgrade your rank to use this slot!");
 							} else if (moveIdx >= getMaxSlot(p)) {
-								p.sendMessage(ChatColor.RED + "Swapping skins to/from donator-only slots requires a donator rank.");
+								p.sendMessage(ChatColor.RED + "Upgrade your rank to use this slot!");
 							} else {
 								s.set(i, movingSkin);
 								s.set(moveIdx, skin);
