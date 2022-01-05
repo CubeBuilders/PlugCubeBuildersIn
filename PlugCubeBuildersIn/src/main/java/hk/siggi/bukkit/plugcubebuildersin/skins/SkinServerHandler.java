@@ -294,7 +294,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 							}
 							updateStatues = true;
 						} else if (line == 3) { // Report Skin
-							p.sendMessage(ChatColor.RED + "This function is not implemented yet.");
+							//p.sendMessage(ChatColor.RED + "This function is not implemented yet.");
 							return;
 						} else {
 							return;
@@ -517,7 +517,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 				statuesPlugin.add(statue);
 			}
 			if (s.showingOther) {
-				String[] sign = new String[]{"Use Skin", "Save a copy", "--------------", "Report Skin"};
+				String[] sign = new String[]{"Use Skin", "Save a copy", "--------------", ""};
 				p.sendSignChange(currentSkinSign.getLocation(), sign);
 			} else {
 				String[] sign = new String[]{"Your current", "skin.", "--------------", "Download Skin"};
@@ -532,7 +532,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 				statuesPlugin.add(statue);
 			}
 			if (s.showingOther) {
-				String[] sign = new String[]{"Use Skin", "Save a copy", "--------------", "Report Skin"};
+				String[] sign = new String[]{"Use Skin", "Save a copy", "--------------", ""};
 				p.sendSignChange(mojangSkinSign.getLocation(), sign);
 			} else {
 				String[] sign = new String[]{"Click to use", "this skin", "--------------", "Download Skin"};
@@ -607,7 +607,7 @@ public class SkinServerHandler implements Listener, TouchsignListener {
 					sign[1] = "Move";
 					sign[2] = "Download Skin";
 					if (s.showingOther) {
-						sign = new String[]{"Use Skin", "Save a copy", "--------------", "Report Skin"};
+						sign = new String[]{"Use Skin", "Save a copy", "--------------", ""};
 					} else {
 						sign[3] = "Delete Skin";
 					}
