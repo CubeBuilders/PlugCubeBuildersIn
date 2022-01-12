@@ -194,7 +194,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 
 	public PlayerSession getSession(Player p) {
 		PlayerSession playerSession = playerSessions.get(p.getUniqueId());
-		if (playerSession == null && p.isOnline()) {
+		if (playerSession == null) {
 			playerSessions.put(p.getUniqueId(), playerSession = new PlayerSession(this, p));
 		}
 		return playerSession;
