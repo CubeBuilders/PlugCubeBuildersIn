@@ -134,6 +134,8 @@ public class PlayerSession {
 		// teleport is not really necessary for turning on.
 		// just for turning off when we return the player to original state.
 		//staffPermsOnState.teleport(player);
+
+		player.setSleepingIgnored(true);
 	}
 
 	private void staffPermsOff() {
@@ -166,6 +168,8 @@ public class PlayerSession {
 		staffPermsOffState.teleport(player);
 
 		player.setStatistic(Statistic.TIME_SINCE_REST, backupTimeSinceRest); // restore previous statistic for phantoms
+
+		player.setSleepingIgnored(false);
 	}
 
 	public void logout() {
