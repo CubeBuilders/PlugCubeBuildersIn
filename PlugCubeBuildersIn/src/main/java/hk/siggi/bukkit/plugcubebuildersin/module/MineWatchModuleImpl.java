@@ -138,7 +138,7 @@ public class MineWatchModuleImpl implements MineWatchModule, Listener {
 				int originalX = b.getX();
 				int originalY = b.getY();
 				int originalZ = b.getZ();
-				for (int y = Math.max(0, originalY - 1); y <= Math.min(255, originalY + 1); y++) {
+				for (int y = Math.max(w.getMinHeight(), originalY - 1); y <= Math.min(w.getMaxHeight() - 1, originalY + 1); y++) {
 					for (int z = originalZ - 1; z <= originalZ + 1; z++) {
 						for (int x = originalX - 1; x <= originalX + 1; x++) {
 							if (x == originalX && y == originalY && z == originalZ) {
