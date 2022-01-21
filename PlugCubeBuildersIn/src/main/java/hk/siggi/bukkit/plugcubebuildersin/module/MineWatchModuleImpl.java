@@ -39,7 +39,7 @@ public class MineWatchModuleImpl implements MineWatchModule, Listener {
 		try {
 			materials.put(Material.NETHER_QUARTZ_ORE, "quartz");
 		} catch (Throwable t) {
-			materials.put(Material.getMaterial("QUARTZ_ORE"), "redstone");
+			materials.put(Material.getMaterial("QUARTZ_ORE"), "quartz");
 			materials.put(Material.getMaterial("GLOWING_REDSTONE_ORE"), "redstone");
 		}
 	}
