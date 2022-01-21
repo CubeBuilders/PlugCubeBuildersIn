@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -41,6 +42,26 @@ public class MineWatchModuleImpl implements MineWatchModule, Listener {
 		} catch (Throwable t) {
 			materials.put(Material.getMaterial("QUARTZ_ORE"), "quartz");
 			materials.put(Material.getMaterial("GLOWING_REDSTONE_ORE"), "redstone");
+		}
+		try {
+			// 1.16
+			materials.put(Material.NETHER_GOLD_ORE, "nethergold");
+			materials.put(Material.ANCIENT_DEBRIS, "ancientdebris");
+		} catch (Throwable t) {
+		}
+		try {
+			// 1.17 & 1.18
+			materials.put(Material.DEEPSLATE_IRON_ORE, "iron");
+			materials.put(Material.DEEPSLATE_GOLD_ORE, "gold");
+			materials.put(Material.DEEPSLATE_COAL_ORE, "coal");
+			materials.put(Material.DEEPSLATE_LAPIS_ORE, "lapis");
+			materials.put(Material.DEEPSLATE_DIAMOND_ORE, "diamond");
+			materials.put(Material.DEEPSLATE_REDSTONE_ORE, "redstone");
+			materials.put(Material.DEEPSLATE_EMERALD_ORE, "emerald");
+
+			materials.put(Material.COPPER_ORE, "copper");
+			materials.put(Material.DEEPSLATE_COPPER_ORE, "copper");
+		} catch (Throwable t) {
 		}
 	}
 
@@ -151,19 +172,11 @@ public class MineWatchModuleImpl implements MineWatchModule, Listener {
 	}
 
 	private boolean isSameMaterial(Material material1, Material material2) {
-		return material1 == material2
-				|| isSameMaterial_backwardscompatible(material1, material2);
-	}
-
-	private boolean isSameMaterial_backwardscompatible(Material material1, Material material2) {
-		try {
-			Material redstone = Material.REDSTONE_ORE;
-			Material redstoneGlow = Material.getMaterial("GLOWING_REDSTONE_ORE");
-			return material1 == redstone && material2 == redstoneGlow
-					|| material1 == redstoneGlow && material2 == redstone;
-		} catch (Throwable t) {
-		}
-		return false;
+		if (material1 == material2)
+			return true;
+		String material1Name = materials.get(material1);
+		String material2Name = materials.get(material2);
+		return Objects.equals(material1Name, material2Name);
 	}
 
 	private void sendMine(Player p, Block block, String ore, int count, int lightLevel) {
