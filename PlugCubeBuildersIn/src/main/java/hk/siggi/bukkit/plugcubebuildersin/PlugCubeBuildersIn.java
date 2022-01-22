@@ -1638,23 +1638,28 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void playerWentAboveTheNether(PlayerMoveEvent event) {
-		// srsly, stop glitching!
 		Location to = event.getTo();
-		Location from = event.getFrom();
-		if (!isAboveTheNether(to) || isAboveTheNether(from)) {
+		if (!isAboveTheNether(to))
 			return;
+		Player player = event.getPlayer();
+		GameMode gameMode = player.getGameMode();
+		if (gameMode == GameMode.SPECTATOR || gameMode == GameMode.CREATIVE)
+			return;
+
+		long now = System.currentTimeMillis();
+		PlayerSession session = getSession(player);
+		if (now - session.aboveNetherWarning > 30000L) {
+			session.aboveNetherWarning = now;
+			player.sendMessage(ChatColor.RED + "-------------------");
+			player.sendMessage(ChatColor.RED + "Stop!");
+			player.sendMessage(ChatColor.RED + "Going above the nether roof is not allowed!");
+			player.sendMessage(ChatColor.RED + "Stop moving to stop receiving damage.");
+			player.sendMessage(ChatColor.RED + "-------------------");
 		}
-		final Player p = event.getPlayer();
-		p.setHealth(1.0);
-		p.damage(1000.0);
-		// we have to do it again in case player is holding a totem of undying
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				p.setHealth(1.0);
-				p.damage(1000.0);
-			}
-		}.runTaskLater(this, 1);
+		if (now - session.aboveNetherDamage > 500L) {
+			session.aboveNetherDamage = now;
+			player.damage(1.0);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

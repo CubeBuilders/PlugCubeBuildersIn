@@ -48,6 +48,9 @@ public class PlayerSession {
 	
 	private int backupTimeSinceRest = 0;
 
+	public long aboveNetherWarning = 0L;
+	public long aboveNetherDamage = 0L;
+
 	PlayerSession(PlugCubeBuildersIn plugin, Player player) {
 		groupList.add("default");
 		this.plugin = plugin;
