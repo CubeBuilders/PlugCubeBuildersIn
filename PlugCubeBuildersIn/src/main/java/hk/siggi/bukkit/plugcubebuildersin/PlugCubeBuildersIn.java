@@ -570,6 +570,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		getCommand("ping").setExecutor(new PingCommand(this));
 		getCommand("pong").setExecutor(new PongCommand(this));
 		pm.registerEvents(this, this);
+		pm.registerEvents(new VanishProtectionListener(this), this);
 		getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		try {
@@ -2587,62 +2588,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			item.setAmount(item.getAmount() - 1);
 		}
 		inventory.setItem(index, item);
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorEntityDamage(EntityDamageEvent event) {
-		Entity smacked = event.getEntity();
-		if ((smacked instanceof Player)) {
-			if (isVanished((Player) smacked)) {
-				event.setCancelled(true);
-			}
-		}
-		if ((event instanceof EntityDamageByEntityEvent)) {
-			EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) event;
-			Entity damager = ev.getDamager();
-			Player player = null;
-			if ((damager instanceof Player)) {
-				player = (Player) damager;
-			} else if ((damager instanceof Projectile)) {
-				Projectile projectile = (Projectile) damager;
-				if ((projectile.getShooter() != null) && ((projectile.getShooter() instanceof Player))) {
-					player = (Player) projectile.getShooter();
-				}
-			}
-			if (player != null) {
-				if (isVanished(player)) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorEntityTarget(EntityTargetEvent event) {
-		if (event.getTarget() instanceof Player) {
-			if (isVanished((Player) event.getTarget())) {
-				event.setCancelled(true);
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorVehicleDestroy(VehicleDestroyEvent event) {
-		Entity entity = event.getAttacker();
-		if (entity instanceof Player) {
-			if (isVanishProtected((Player) entity)) {
-				event.setCancelled(true);
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void spectatorVehicleEntityCollision(VehicleEntityCollisionEvent event) {
-		if (event.getEntity() instanceof Player) {
-			if (isVanished((Player) event.getEntity())) {
-				event.setCancelled(true);
-			}
-		}
 	}
 
 	private VariableUpdater[] variableUpdaters = null;
