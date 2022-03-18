@@ -1233,26 +1233,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		}
 	}
 
-	private boolean spectatorsCanSeeOtherSpectators = false;
-
-	public boolean spectatorsCanSeeOtherSpectators() {
-		return spectatorsCanSeeOtherSpectators;
-	}
-
-	public void setSpectatorsCanSeeOtherSpectators(boolean spectatorsCanSeeOtherSpectators) {
-		this.spectatorsCanSeeOtherSpectators = spectatorsCanSeeOtherSpectators;
-	}
-
-	private final Set<PlayerVanisher> vanishers = new HashSet<>();
-
-	public void addPlayerVanisher(PlayerVanisher vanisher) {
-		vanishers.add(vanisher);
-	}
-
-	public void removePlayerVanisher(PlayerVanisher vanisher) {
-		vanishers.remove(vanisher);
-	}
-
 	private void updatePlayerVisibility() {
 		if (skinServerHandler != null) {
 			return;
@@ -1275,20 +1255,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 				PlayerSession p2Session = getSession(p2);
 				if (!p1Session.canHandleVanish() || !p2Session.canHandleVanish()) {
 					continue;
-				}
-				for (PlayerVanisher vanisher : vanishers) {
-					try {
-						if (!vanisher.canSee(p1, p2)) {
-							showP2toP1 = false;
-						}
-					} catch (Exception e) {
-					}
-					try {
-						if (!vanisher.canSee(p2, p1)) {
-							showP1toP2 = false;
-						}
-					} catch (Exception e) {
-					}
 				}
 				if (p1Vanish && !p2CanSeeVanished) {
 					showP1toP2 = false;
