@@ -1573,10 +1573,21 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void playerMoved(PlayerMoveEvent event) {
+		long now = System.currentTimeMillis();
+		Player p = event.getPlayer();
+		PlayerSession session = getSession(p);
 		Location from = event.getFrom();
 		Location to = event.getTo();
+		if (to == null)
+			return;
+		if (from.distanceSquared(to) > 0.0) {
+			session.lastMove = now;
+		}
 		if (from.getPitch() != to.getPitch() || from.getYaw() != to.getYaw()) {
-			resetAFKTimer(event.getPlayer());
+			session.lastRotate = now;
+		}
+		if (now - session.lastMove < 5000L && now - session.lastRotate < 5000L) {
+			resetAFKTimer(p);
 		}
 	}
 

@@ -51,6 +51,9 @@ public class PlayerSession {
 	public long aboveNetherWarning = 0L;
 	public long aboveNetherDamage = 0L;
 
+	public long lastMove = 0L;
+	public long lastRotate = 0L;
+
 	PlayerSession(PlugCubeBuildersIn plugin, Player player) {
 		groupList.add("default");
 		this.plugin = plugin;
