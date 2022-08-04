@@ -6,6 +6,7 @@ import hk.siggi.bukkit.plugcubebuildersin.nms.SkinSettings;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.server.level.EntityPlayer;
@@ -20,12 +21,14 @@ import net.minecraft.server.level.WorldServer;
 import org.bukkit.block.Skull;
 import org.bukkit.craftbukkit.v1_17_R1.block.CraftBlockEntityState;
 import org.bukkit.craftbukkit.v1_17_R1.block.CraftSkull;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.ElderGuardian;
 import org.bukkit.entity.Endermite;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Evoker;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Guardian;
@@ -182,6 +185,14 @@ public class NMSUtil extends hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil<Pack
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public Packet createEntityStatusPacket(Entity entity, int status) {
+		CraftEntity craftEntity = (CraftEntity) entity;
+		net.minecraft.world.entity.Entity nmsEntity = craftEntity.getHandle();
+
+		return new PacketPlayOutEntityStatus(nmsEntity, (byte) status);
 	}
 
 	private final BrigadierUtil brigadierUtil = new BrigadierUtil();

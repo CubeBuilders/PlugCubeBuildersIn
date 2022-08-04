@@ -3,6 +3,7 @@ package hk.siggi.bukkit.plugcubebuildersin.nms;
 import com.mojang.authlib.GameProfile;
 import org.bukkit.World;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -46,5 +47,10 @@ public class NullNMSUtil extends NMSUtil<Object> {
 	@Override
 	public boolean isHostile(LivingEntity entity) {
 		return false;
+	}
+
+	@Override
+	public Object createEntityStatusPacket(Entity entity, int status) {
+		return null;
 	}
 }

@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -96,6 +97,18 @@ public abstract class NMSUtil<PKT> {
 	public abstract int getPing(Player p);
 	
 	public abstract boolean isHostile(LivingEntity entity);
+
+	public abstract PKT createEntityStatusPacket(Entity entity, int status);
+
+	public void setClientSideOpLevel(Player p, int opLevel) {
+		sendPacket(p, createEntityStatusPacket(p, clamp(opLevel, 0, 4) + 24));
+	}
+
+	public static int clamp(int value, int min, int max) {
+		if (value < min) return min;
+		if (value > max) return max;
+		return value;
+	}
 
 	public BrigadierUtil getBrigadierUtil() {
 		throw new UnsupportedOperationException();

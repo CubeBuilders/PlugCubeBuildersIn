@@ -13,6 +13,7 @@ import net.minecraft.server.v1_14_R1.EnumChatVisibility;
 import net.minecraft.server.v1_14_R1.GameProfileSerializer;
 import net.minecraft.server.v1_14_R1.NBTTagCompound;
 import net.minecraft.server.v1_14_R1.Packet;
+import net.minecraft.server.v1_14_R1.PacketPlayOutEntityStatus;
 import net.minecraft.server.v1_14_R1.PacketPlayOutTileEntityData;
 import net.minecraft.server.v1_14_R1.PlayerChunkMap;
 import net.minecraft.server.v1_14_R1.TileEntitySkull;
@@ -21,12 +22,14 @@ import net.minecraft.server.v1_14_R1.WorldServer;
 import org.bukkit.block.Skull;
 import org.bukkit.craftbukkit.v1_14_R1.block.CraftBlockEntityState;
 import org.bukkit.craftbukkit.v1_14_R1.block.CraftSkull;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.ElderGuardian;
 import org.bukkit.entity.Endermite;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Evoker;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Guardian;
@@ -221,6 +224,14 @@ public class NMSUtil extends hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil<Pack
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public Packet createEntityStatusPacket(Entity entity, int status) {
+		CraftEntity craftEntity = (CraftEntity) entity;
+		net.minecraft.server.v1_14_R1.Entity nmsEntity = craftEntity.getHandle();
+
+		return new PacketPlayOutEntityStatus(nmsEntity, (byte) status);
 	}
 
 	private final BrigadierUtil brigadierUtil = new BrigadierUtil();
