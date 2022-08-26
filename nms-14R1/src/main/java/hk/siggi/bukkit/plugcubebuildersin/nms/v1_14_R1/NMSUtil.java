@@ -97,6 +97,7 @@ public class NMSUtil extends hk.siggi.bukkit.plugcubebuildersin.nms.NMSUtil<Pack
 			org.bukkit.craftbukkit.v1_14_R1.CraftWorld cw = (org.bukkit.craftbukkit.v1_14_R1.CraftWorld) world;
 			WorldServer handle = cw.getHandle();
 			Method setViewDistance = PlayerChunkMap.class.getDeclaredMethod("setViewDistance", int.class);
+			setViewDistance.setAccessible(true);
 			setViewDistance.invoke(handle.getChunkProvider().playerChunkMap, distance);
 		} catch (Exception e) {
 		}
