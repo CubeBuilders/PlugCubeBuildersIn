@@ -2,8 +2,8 @@ package hk.siggi.bukkit.plugcubebuildersin.playerstate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import hk.siggi.bukkit.nbt.NBTTool;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
+import io.siggi.nbt.NBTTool;
 import java.util.Collection;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -204,7 +204,7 @@ public class PlayerState {
 	private static final Gson gson;
 
 	static {
-		gson = NBTTool.getSerializer().registerTo(new GsonBuilder()).registerTypeAdapter(PotionEffect.class, new PotionEffectAdapter()).setPrettyPrinting().create();
+		gson = NBTTool.registerTo(new GsonBuilder()).registerTypeAdapter(PotionEffect.class, new PotionEffectAdapter()).setPrettyPrinting().create();
 	}
 
 	public String toJson() {

@@ -1,10 +1,9 @@
 package hk.siggi.bukkit.plugcubebuildersin.punisher;
 
-import hk.siggi.bukkit.nbt.NBTCompound;
-import hk.siggi.bukkit.nbt.NBTTool;
-import hk.siggi.bukkit.nbt.NBTUtil;
 import hk.siggi.bukkit.plugcubebuildersin.PlugCubeBuildersIn;
 import hk.siggi.bukkit.plugcubebuildersin.util.Util;
+import io.siggi.nbt.NBTCompound;
+import io.siggi.nbt.NBTToolBukkit;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.lang.ref.WeakReference;
@@ -266,11 +265,10 @@ public class PunisherModuleImpl implements PunisherModule, Listener {
 
 	ItemStack item(Material material, short datavalue, String name, String[] lore, String action, UUID target) {
 		ItemStack stack = new ItemStack(material, 1, datavalue);
-		NBTUtil util = NBTTool.getUtil();
-		NBTCompound tag = util.newCompound();
+		NBTCompound tag = new NBTCompound();
 		tag.setString("PunisherAction", action);
 		tag.setString("PunisherTarget", target.toString().replace("-", ""));
-		stack = util.setTag(stack, tag);
+		stack = NBTToolBukkit.setTag(stack, tag);
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(name);
 		if (lore != null) {
@@ -281,8 +279,7 @@ public class PunisherModuleImpl implements PunisherModule, Listener {
 	}
 
 	String getAction(ItemStack item) {
-		NBTUtil util = NBTTool.getUtil();
-		NBTCompound tag = util.getTag(item);
+		NBTCompound tag = NBTToolBukkit.getTag(item);
 		if (tag == null) {
 			return null;
 		}
@@ -290,8 +287,7 @@ public class PunisherModuleImpl implements PunisherModule, Listener {
 	}
 
 	UUID getTarget(ItemStack item) {
-		NBTUtil util = NBTTool.getUtil();
-		NBTCompound tag = util.getTag(item);
+		NBTCompound tag = NBTToolBukkit.getTag(item);
 		if (tag == null) {
 			return null;
 		}

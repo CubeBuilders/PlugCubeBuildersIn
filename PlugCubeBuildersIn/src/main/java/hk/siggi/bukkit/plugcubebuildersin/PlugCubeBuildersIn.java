@@ -5,10 +5,6 @@ import com.google.gson.stream.JsonToken;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import hk.siggi.bukkit.nbt.NBTCompound;
-import hk.siggi.bukkit.nbt.NBTList;
-import hk.siggi.bukkit.nbt.NBTTool;
-import hk.siggi.bukkit.nbt.NBTUtil;
 import hk.siggi.bukkit.plugcubebuildersin.commands.BountyCommand;
 import hk.siggi.bukkit.plugcubebuildersin.commands.ClearChatCommand;
 import hk.siggi.bukkit.plugcubebuildersin.commands.CloseTheEnd;
@@ -55,6 +51,9 @@ import hk.siggi.bukkit.plugcubebuildersin.util.CommandThrowableCatchingProxy;
 import hk.siggi.bukkit.plugcubebuildersin.util.Util;
 import static hk.siggi.bukkit.plugcubebuildersin.util.Util.tryClose;
 import hk.siggi.bukkit.plugcubebuildersin.vanish.PlayerVanisher;
+import io.siggi.nbt.NBTCompound;
+import io.siggi.nbt.NBTList;
+import io.siggi.nbt.NBTToolBukkit;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1121,7 +1120,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			return true;
 		}
 		try {
-			NBTCompound rootTag = NBTTool.getUtil().getTag(stack);
+			NBTCompound rootTag = NBTToolBukkit.getTag(stack);
 			NBTCompound compound = rootTag.getCompound("CubeBuilders");
 			boolean isUndroppable = compound.getInt("undroppable") == 1;
 			return isUndroppable;
@@ -2735,7 +2734,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	}
 
 	public boolean isHackedItem(ItemStack stack) {
-		NBTCompound tag = NBTTool.getUtil().getTag(stack);
+		NBTCompound tag = NBTToolBukkit.getTag(stack);
 		if (tag == null) {
 			return false;
 		}
@@ -3336,10 +3335,9 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	}
 
 	public ItemStack createSkull(UUID player, String name, String textures, String texturesSignature) {
-		NBTUtil util = NBTTool.getUtil();
 		ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
-		NBTCompound compound = util.newCompound();
-		NBTCompound skullOwner = util.newCompound();
+		NBTCompound compound = new NBTCompound();
+		NBTCompound skullOwner = new NBTCompound();
 		if (player != null) {
 			skullOwner.setString("Id", player.toString());
 		}
@@ -3347,9 +3345,9 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			skullOwner.setString("Name", name);
 		}
 		if (textures != null) {
-			NBTCompound properties = util.newCompound();
-			NBTList texturesList = util.newList();
-			NBTCompound texturePayload = util.newCompound();
+			NBTCompound properties = new NBTCompound();
+			NBTList texturesList = new NBTList();
+			NBTCompound texturePayload = new NBTCompound();
 			texturePayload.setString("Value", textures);
 			if (texturesSignature != null) {
 				texturePayload.setString("Signature", texturesSignature);
@@ -3359,7 +3357,7 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			skullOwner.setCompound("Properties", properties);
 		}
 		compound.setCompound("SkullOwner", skullOwner);
-		return util.setTag(stack, compound);
+		return NBTToolBukkit.setTag(stack, compound);
 	}
 
 	public void setPublicChatGroup(String server, String group) {

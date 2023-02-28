@@ -1,7 +1,10 @@
 package hk.siggi.bukkit.plugcubebuildersin.module.minigamehub;
 
-import hk.siggi.bukkit.nbt.NBTTool;
 import static hk.siggi.bukkit.plugcubebuildersin.module.minigamehub.MinigameUtil.read;
+import com.google.gson.GsonBuilder;
+import io.siggi.nbt.NBTCompound;
+import io.siggi.nbt.NBTTool;
+import io.siggi.nbt.NBTToolBukkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +22,7 @@ public abstract class MinigameMap {
 
 	private final String name;
 	private final List<MinigameMapArtist> artists;
-	private final String icon;
+	private final NBTCompound icon;
 
 	protected MinigameMap(File f) {
 		this.name = f.getName();
@@ -70,7 +73,7 @@ public abstract class MinigameMap {
 		artists = Collections.unmodifiableList(artistsList);
 		File iconFile = new File(f, "icon.json");
 		if (iconFile.exists()) {
-			this.icon = read(iconFile);
+			this.icon = NBTTool.registerTo(new GsonBuilder()).create().fromJson(read(iconFile), NBTCompound.class);
 		} else {
 			this.icon = null;
 		}
@@ -87,7 +90,7 @@ public abstract class MinigameMap {
 	public final ItemStack getIcon() {
 		ItemStack stack;
 		try {
-			stack = NBTTool.getUtil().itemFromNBT(NBTTool.getSerializer().fromJson(icon));
+			stack = NBTToolBukkit.itemFromNBT(icon);
 		} catch (Exception e) {
 			stack = new ItemStack(Material.STONE);
 		}

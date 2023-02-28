@@ -5,10 +5,9 @@
  */
 package hk.siggi.bukkit.plugcubebuildersin.module.minigamehub;
 
-import hk.siggi.bukkit.nbt.NBTCompound;
-import hk.siggi.bukkit.nbt.NBTTool;
-import hk.siggi.bukkit.nbt.NBTUtil;
 import static hk.siggi.bukkit.plugcubebuildersin.util.Util.tryClose;
+import io.siggi.nbt.NBTCompound;
+import io.siggi.nbt.NBTToolBukkit;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,14 +39,13 @@ public class MinigameUtil {
 
 	public static ItemStack setInfo(ItemStack stack, String info) {
 		try {
-			NBTUtil util = NBTTool.getUtil();
-			NBTCompound tag = util.getTag(stack);
+			NBTCompound tag = NBTToolBukkit.getTag(stack);
 			if (tag == null) {
-				tag = util.newCompound();
+				tag = new NBTCompound();
 			}
 			tag.setString("minigameInfo", info);
 			tag.setByte("HideFlags", (byte) 63);
-			stack = util.setTag(stack, tag);
+			stack = NBTToolBukkit.setTag(stack, tag);
 		} catch (Exception e) {
 		}
 		return stack;
@@ -55,7 +53,7 @@ public class MinigameUtil {
 
 	public static String getInfo(ItemStack stack) {
 		try {
-			return NBTTool.getUtil().getTag(stack).getString("minigameInfo");
+			return NBTToolBukkit.getTag(stack).getString("minigameInfo");
 		} catch (Exception e) {
 		}
 		return null;
@@ -161,8 +159,7 @@ public class MinigameUtil {
 
 	public static boolean isSpecialItem(ItemStack stack) {
 		try {
-			NBTUtil util = NBTTool.getUtil();
-			NBTCompound tag = util.getTag(stack);
+			NBTCompound tag = NBTToolBukkit.getTag(stack);
 			String x = tag.getString("minigameitem");
 			return x != null && !x.isEmpty();
 		} catch (Exception e) {
@@ -171,13 +168,12 @@ public class MinigameUtil {
 	}
 
 	public static ItemStack setVotes(ItemStack stack, int votes) {
-		NBTUtil util = NBTTool.getUtil();
-		NBTCompound tag = util.getTag(stack);
+		NBTCompound tag = NBTToolBukkit.getTag(stack);
 		if (tag == null) {
-			tag = util.newCompound();
+			tag = new NBTCompound();
 		}
 		tag.setByte("HideFlags", (byte) 63);
-		stack = util.setTag(stack, tag);
+		stack = NBTToolBukkit.setTag(stack, tag);
 		ItemMeta itemMeta = stack.getItemMeta();
 		for (Enchantment enc : itemMeta.getEnchants().keySet()) {
 			itemMeta.removeEnchant(enc);
@@ -267,14 +263,13 @@ public class MinigameUtil {
 		public abstract ItemStack create();
 
 		protected final ItemStack finish(ItemStack stack) {
-			NBTUtil util = NBTTool.getUtil();
-			NBTCompound tag = util.getTag(stack);
+			NBTCompound tag = NBTToolBukkit.getTag(stack);
 			if (tag == null) {
-				tag = util.newCompound();
+				tag = new NBTCompound();
 			}
 			tag.setByte("HideFlags", (byte) 63);
 			tag.setString("minigameitem", minigameItemType);
-			stack = util.setTag(stack, tag);
+			stack = NBTToolBukkit.setTag(stack, tag);
 			return stack;
 		}
 
@@ -284,8 +279,7 @@ public class MinigameUtil {
 				return false;
 			}
 			try {
-				NBTUtil util = NBTTool.getUtil();
-				NBTCompound tag = util.getTag(t);
+				NBTCompound tag = NBTToolBukkit.getTag(t);
 				return tag.getString("minigameitem").equals(minigameItemType);
 			} catch (Exception e) {
 			}
