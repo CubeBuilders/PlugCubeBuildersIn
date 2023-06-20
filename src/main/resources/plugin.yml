@@ -4,7 +4,7 @@ version: {VERSION}
 author: Siggi
 description: The CubeBuilders plugin.
 softdepend: [Factions, Touchsigns, Statues, GsonBukkit, Essentials, EssentialsSpawn, WorldGuard, WorldEdit, PermissionsEx, OpenInv]
-depend: [NBTTool]
+depend: [NBTTool, CubeCore]
 api-version: 1.13
 permissions:
     hk.siggi.plugcubebuildersin.spawneditems:
