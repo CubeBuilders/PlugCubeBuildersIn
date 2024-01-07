@@ -1964,8 +1964,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		try {
 			GameProfile profile = getGameProfile(p);
 			Property property = profile.getProperties().get("textures").iterator().next();
-			String value = property.getValue();
-			String signature = property.getSignature();
+			String value = property.value();
+			String signature = property.signature();
 			fos = new FileOutputStream(new File(getTextureCacheDir(), (p.getUniqueId().toString().replace("-", "").toLowerCase()) + ".txt"));
 			fos.write((value + "\n").getBytes());
 			fos.write((signature + "\n").getBytes());
@@ -3326,8 +3326,8 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 			if (iterator.hasNext()) {
 				Property prop = iterator.next();
 				if (prop != null) {
-					textures = prop.getValue();
-					texturesSignature = prop.getSignature();
+					textures = prop.value();
+					texturesSignature = prop.signature();
 				}
 			}
 		}

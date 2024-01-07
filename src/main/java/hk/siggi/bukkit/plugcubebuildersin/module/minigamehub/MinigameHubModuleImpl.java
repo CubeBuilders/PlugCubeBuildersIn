@@ -344,8 +344,8 @@ public class MinigameHubModuleImpl implements MinigameHubModule, VariableListene
 					name = profile.getName();
 					Collection<Property> textures = profile.getProperties().get("textures");
 					Property texturesProperty = textures.iterator().next();
-					skin = texturesProperty.getValue();
-					skinSignature = texturesProperty.getSignature();
+					skin = texturesProperty.value();
+					skinSignature = texturesProperty.signature();
 				} catch (Exception e) {
 				}
 				ItemStack skull = plugin.createSkull(uuid, name, skin, skinSignature);
