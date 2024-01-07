@@ -1524,10 +1524,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 	private Class skullClass = null;
 	private Field profileFieldInSkullClass = null;
 
-	public void setOwner(Skull skull, String name) {
-		setGameProfile(skull, getGameProfile(new GameProfile(null, name)));
-	}
-
 	public void setGameProfile(Skull skull, GameProfile profile) {
 		try {
 			if (skullClass == null || profileFieldInSkullClass == null) {

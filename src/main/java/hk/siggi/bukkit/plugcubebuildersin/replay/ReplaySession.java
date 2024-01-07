@@ -582,7 +582,7 @@ public class ReplaySession {
 			Statue statue = statues.get(player);
 			if (statue == null) {
 				PlugCubeBuildersIn plugin = PlugCubeBuildersIn.getInstance();
-				GameProfile originalProfile = plugin.getGameProfile(new GameProfile(player, null));
+				GameProfile originalProfile = plugin.getGameProfile(new GameProfile(player, ""));
 				String newName = "[R]" + originalProfile.getName();
 				newName = newName.substring(0, Math.min(newName.length(), 16));
 				GameProfile modifiedProfile = new GameProfile(modifyUUID(player), newName);

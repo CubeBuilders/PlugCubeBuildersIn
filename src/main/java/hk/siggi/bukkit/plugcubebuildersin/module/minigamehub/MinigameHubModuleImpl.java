@@ -340,7 +340,7 @@ public class MinigameHubModuleImpl implements MinigameHubModule, VariableListene
 				String name = null;
 				try {
 					uuid = session.players.get(0).getUniqueId();
-					GameProfile profile = plugin.getGameProfile(new GameProfile(uuid, null));
+					GameProfile profile = plugin.getGameProfile(new GameProfile(uuid, ""));
 					name = profile.getName();
 					Collection<Property> textures = profile.getProperties().get("textures");
 					Property texturesProperty = textures.iterator().next();

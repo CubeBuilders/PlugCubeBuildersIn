@@ -542,10 +542,10 @@ public final class HighscoresModuleImpl implements HighscoresModule, Listener {
 			try {
 				GameProfile profile = null;
 				if (score != null) {
-					profile = plugin.getGameProfile(new GameProfile(score.player, null));
+					profile = plugin.getGameProfile(new GameProfile(score.player, ""));
 				}
 				if (profile == null) {
-					profile = plugin.getGameProfile(new GameProfile((view.position % 2 == 1) ? Siggi : CubeBuildersGirl, null));
+					profile = plugin.getGameProfile(new GameProfile((view.position % 2 == 1) ? Siggi : CubeBuildersGirl, ""));
 				}
 				plugin.setGameProfile(skull, profile);
 				skull.update();
