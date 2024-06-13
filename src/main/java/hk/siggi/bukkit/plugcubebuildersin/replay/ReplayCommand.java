@@ -112,7 +112,7 @@ public class ReplayCommand implements CommandExecutor, TabCompleter {
 				if (args.length == 0) {
 					p.sendMessage(ChatColor.GOLD + "Usage:" + ChatColor.YELLOW + "/replay load YYYY/MM/DD-HH:MM:SS-TimeZone");
 					p.sendMessage(ChatColor.GOLD + "Omitting year will assume " + ChatColor.YELLOW + currentYear + ChatColor.GOLD + ", omitting timezone will assume " + ChatColor.YELLOW + "GMT" + ChatColor.GOLD + ".");
-					p.sendMessage(ChatColor.YELLOW + "Note for retards: GMT does not adjust with daylight saving time. American Eastern Time is GMT-5 in Winter, and GMT-4 in Summer, it's NOT always GMT-5.");
+					p.sendMessage(ChatColor.YELLOW + "Important: GMT does not adjust with daylight saving time. American Eastern Time is GMT-5 in Winter, and GMT-4 in Summer, it's NOT always GMT-5.");
 					p.sendMessage(ChatColor.GOLD + "Usage:" + ChatColor.YELLOW + "/replay load -DD:HH:MM:SS");
 					p.sendMessage(ChatColor.GOLD + "Backtrack from the current time a certain number of hours, minutes, seconds. You may omit " + ChatColor.YELLOW + "<days>" + ChatColor.GOLD + ", " + ChatColor.YELLOW + "<days and hours>" + ChatColor.GOLD + ", or " + ChatColor.YELLOW + "<days, hours and minutes>" + ChatColor.GOLD + ".");
 					return;
