@@ -65,9 +65,6 @@ commands:
     donate:
         description: Buy CubeTokens or get a Donator rank!
         usage: /<command>
-    buy:
-        description: Buy CubeTokens or get a Donator rank!
-        usage: /<command>
     vote:
         description: Vote for CubeBuilders and get money!
         usage: /<command>

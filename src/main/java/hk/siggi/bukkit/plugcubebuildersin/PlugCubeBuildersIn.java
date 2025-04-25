@@ -548,7 +548,6 @@ public class PlugCubeBuildersIn extends JavaPlugin implements Listener, PluginMe
 		getCommand("help").setExecutor(new HelpCommand(this, serverName));
 		DonateCommand dc = new DonateCommand(this);
 		getCommand("donate").setExecutor(dc);
-		getCommand("buy").setExecutor(dc);
 		getCommand("vote").setExecutor(new VoteCommand(this));
 		getCommand("bounty").setExecutor(new BountyCommand(this));
 		getCommand("worldspawn").setExecutor(new WorldSpawnCommand(this));
